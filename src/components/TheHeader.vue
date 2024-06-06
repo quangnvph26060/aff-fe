@@ -78,7 +78,7 @@ const handleDrawer = () => {
 					</a-avatar>
 					<div v-if="showModal" class="modal_profile">
 						<ul>
-							<li><a href="#">Thông Tin</a></li>
+							<li><a href="/profile">Thông Tin</a></li>
 							<li><a href="#" @click="handleLogout">Đăng Xuất</a></li>
 						</ul>
 					</div>

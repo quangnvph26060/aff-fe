@@ -1,90 +1,105 @@
 <script setup lang="ts">
-import { useFormatCurrency } from "../../composables/useFormatCurrency";
-const imgs: {
-	index: number;
-	image: string;
-}[] = reactive([
-	{
-		index: 1,
-		image: "https://odinshop.vn/wp-content/uploads/2022/05/IMG_8227.jpg",
-	},
-	{
-		index: 2,
-		image: "https://lili.vn/wp-content/uploads/2020/11/vong-tay-bac-925-dinh-pha-le-swarovski-1.jpg",
-	},
-]);
-const productList: {
-	index: number;
-	name: string;
-	describe: string;
-	oldPrice: number;
-	price: number;
-	quantitySold: number;
-}[] = reactive([
-	{
-		index: 1,
-		name: "Vòng tay huyết áp",
-		describe:
-			"Sản phẩm với các thành phần có nguồn gốc tự nhiên như rau má là các dưỡng chất quan trọng để có một làn da được dưỡng ẩm mềm mại, ngoài ra còn giúp làn da ngăn chặn quá trình oxy hóa cũng như duy trì độ ẩm để làn da của bạn luôn luôn trẻ trung, đẹp tự nhiên.",
-		oldPrice: 1000000,
-		price: 500000,
-		quantitySold: 2500,
-	},
-]);
+import { ref, reactive, computed, onMounted } from "vue";
+// import { useFormatCurrency } from "../../composables/useFormatCurrency";
+import Product from '../../../api/products/product.js';
+import { useFormatCurrency } from "@/composables/useFormatCurrency";
+const {getProduct, responseProduct, findProduct} = Product();
 
-interface Product {
-	brand: string;
-	model: string;
-	availability: number;
-	name: string;
-	description: string;
-	type: string;
-	price: number;
-	discount: number;
-	images: string;
-}
+const url = window.location.href;
+const id = url.substring(url.lastIndexOf('/') + 1);
+   findProduct(id);
+// const imgs: {
+// 	index: number;
+// 	image: string;
+// }[] = reactive([
+// 	{
+// 		index: 1,
+// 		image: "https://odinshop.vn/wp-content/uploads/2022/05/IMG_8227.jpg",
+// 	},
+// 	{
+// 		index: 2,
+// 		image: "https://lili.vn/wp-content/uploads/2020/11/vong-tay-bac-925-dinh-pha-le-swarovski-1.jpg",
+// 	},
+// ]);
+// const productList: {
+// 	index: number;
+// 	name: string;
+// 	describe: string;
+// 	oldPrice: number;
+// 	price: number;
+// 	quantitySold: number;
+// }[] = reactive([
+// 	{
+// 		index: 1,
+// 		name: "Vòng tay huyết áp",
+// 		describe:
+// 			"Sản phẩm với các thành phần có nguồn gốc tự nhiên như rau má là các dưỡng chất quan trọng để có một làn da được dưỡng ẩm mềm mại, ngoài ra còn giúp làn da ngăn chặn quá trình oxy hóa cũng như duy trì độ ẩm để làn da của bạn luôn luôn trẻ trung, đẹp tự nhiên.",
+// 		oldPrice: 1000000,
+// 		price: 500000,
+// 		quantitySold: 2500,
+// 	},
+// ]);
 
-const productData: Product = reactive({
-	brand: "Apple",
-	model: "AirPods Pro",
-	availability: 10,
-	name: "Tai nghe không dây Apple AirPods Pro",
-	description:
-		"-Tai nghe không dây Apple AirPods Pro chính hãng\n- Chống ồn hiệu quả\n- Âm thanh chất lượng\n- Thiết kế sang trọng\n- Kết nối nhanh chóng\n- Sạc nhanh",
-	type: "Tai nghe",
-	price: 5000000,
-	discount: 10,
-	images: "https://tiki.vn/blog/wp-content/uploads/2023/01/airpod-3-va-airpod-pro.jpg",
-});
+// interface Product {
+// 	brand: string;
+// 	model: string;
+// 	availability: number;
+// 	name: string;
+// 	description: string;
+// 	type: string;
+// 	price: number;
+// 	discount: number;
+// 	images: string;
+// }
 
-const option = ref(null);
-const quantity = ref(1);
+// const productData: Product = reactive({
+// 	brand: "Apple",
+// 	model: "AirPods Pro",
+// 	availability: 10,
+// 	name: "Tai nghe không dây Apple AirPods Pro",
+// 	description:
+// 		"-Tai nghe không dây Apple AirPods Pro chính hãng\n- Chống ồn hiệu quả\n- Âm thanh chất lượng\n- Thiết kế sang trọng\n- Kết nối nhanh chóng\n- Sạc nhanh",
+// 	type: "Tai nghe",
+// 	price: 5000000,
+// 	discount: 10,
+// 	images: "https://tiki.vn/blog/wp-content/uploads/2023/01/airpod-3-va-airpod-pro.jpg",
+// });
 
-const descriptionList = computed(() => {
-	return productData.description
-		.split("\n")
-		.map((item) => item.replace(/^-/, "").trim());
-});
+// const option = ref(null);
+// const quantity = ref(1);
 
-const activeKey = ref("1");
+// const descriptionList = computed(() => {
+// 	return productData.description
+// 		.split("\n")
+// 		.map((item) => item.replace(/^-/, "").trim());
+// });
+
+// const activeKey = ref("1");
+const getImageUrl = (imagePath) => {
+  const baseUrl = 'http://127.0.0.1:8000';
+  const modifiedImagePath = imagePath.replace('public', 'storage');
+  return `${baseUrl}/${modifiedImagePath}`;
+};
 </script>
 <template>
 	<div class="bg-[white] p-5 space-y-5">
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-x-[20px]">
 			<div class="col-span-1 flex justify-center">
 				<a-image
-					:src="productData.images"
+				:src="getImageUrl(responseProduct.data?.images[0]['image_path'] ?? [])"
 					class="object-cover max-w-[500px]"
 					:preview="false"
 				></a-image>
+				
 			</div>
 			<div class="col-span-1 space-y-4 mt-5">
 				<span class="text-2xl">
-					{{ productData.name }}
+					<!-- {{ productData.name }} --> 
+					{{ responseProduct.data.name }}
 				</span>
 				<!-- begin::Description -->
 				<div>
-					<ul class="list-disc list-inside space-y-1">
+					<!-- <ul class="list-disc list-inside space-y-1">
 						<li
 							v-for="(item, index) in descriptionList"
 							:key="index"
@@ -92,7 +107,8 @@ const activeKey = ref("1");
 						>
 							{{ item }}
 						</li>
-					</ul>
+					</ul> -->
+					{{ responseProduct.data.description }}
 				</div>
 				<!-- end::Description -->
 				<a-divider />
@@ -122,12 +138,12 @@ const activeKey = ref("1");
 					<a-descriptions title="Giá tiền:">
 						<a-descriptions-item>
 							<span class="text-xl">
-								{{ useFormatCurrency(productData.price) }}
+								<!-- {{ useFormatCurrency(productData.price) }} --> {{ useFormatCurrency(responseProduct.data.price) }}
 							</span>
 							<span
 								class="text-base ml-3 line-through text-slate-400"
 							>
-								{{ useFormatCurrency(productData.price) }}
+								<!-- {{ useFormatCurrency(productData.price) }}   -->{{ responseProduct.data.commission_rate }} %
 							</span>
 						</a-descriptions-item>
 					</a-descriptions>

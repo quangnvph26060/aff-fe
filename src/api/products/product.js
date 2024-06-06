@@ -20,9 +20,20 @@ export default function Product() {
             console.error('Error fetching the product:', error);
         }
     }
-    
+    const findProduct = async (id) =>{
+        try {
+            const response = await axios.post(`${API_BACK_END}products/${id}`);
+            if(response.data.status === 'success'){
+                responseProduct.data = response.data.data;
+                console.log(responseProduct.data);
+            }
+        } catch (error) {
+            console.error('Error fetching the product:', error);
+        }
+    }
     return {
         getProduct,
-        responseProduct
+        responseProduct,
+        findProduct
     }
 }

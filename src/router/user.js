@@ -35,6 +35,13 @@ const user = [
 				component: () => import("../pages/products/index.vue"),
 			},
 			{
+				path: "products/detail/:id",
+				name: "describe",
+				component: () =>
+				import("../components/Table/Products/Detail.vue"),
+			},
+			
+			{
 				path: "orders",
 				name: "orders",
 				component: () => import("../pages/orders/index.vue"),

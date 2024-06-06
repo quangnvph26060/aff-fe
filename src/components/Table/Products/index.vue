@@ -8,12 +8,10 @@ import { ShoppingCartOutlined } from "@ant-design/icons-vue";
 import Product from '../../../api/products/product.js';
 import Cart from '../../../api/carts/cart.js';
 import { useStore} from "vuex"
-const {getProduct, responseProduct} = Product();
+const {getProduct, responseProduct, findProduct} = Product();
 const{addToCart} = Cart();
 const store = useStore();
-onMounted(() => {
-	console.log( store.getters['user']);
-});
+const router = useRouter();
 const productList: {
 	index: number;
 	images: string;
@@ -185,26 +183,27 @@ const productList: {
 ]);
 
 // xử lý chuyển trang
-const handleSelected = (index: number) => {
-	router.push("/products/describe");
+const handleSelected = async  (index) => {
+	await findProduct(index);
+	await router.push(`/products/detail/${index}`);
 };
 
 //Infinite Scroll
-const loading = ref(true);
-const index = 0;
-const limit = 8;
-let newProducts = productList.splice(index, limit);
+// const loading = ref(true);
+// const index = 0;
+// const limit = 8;
+// let newProducts = getProduct.splice(index, limit);
 
-const load = () => {
-	setTimeout(() => {
-		loading.value = false;
-		if (productList.length > 0) {
-			newProducts = newProducts.concat(productList.splice(index, limit));
-		} else {
-			loading.value = false;
-		}
-	}, 2000);
-};
+// const load = () => {
+// 	setTimeout(() => {
+// 		loading.value = false;
+// 		if (getProduct.length > 0) {
+// 			newProducts = newProducts.concat(productList.splice(index, limit));
+// 		} else {
+// 			loading.value = false;
+// 		}
+// 	}, 2000);
+// };
 
 const beforeEnter = (el: HTMLElement) => {
 	el.style.opacity = "0";
@@ -240,6 +239,10 @@ const getImageUrl = (imagePath) => {
   const modifiedImagePath = imagePath.replace('public', 'storage');
   return `${baseUrl}/${modifiedImagePath}`;
 };
+// mã hóa id
+const encodeId = (id) => {
+  return btoa(id);
+};
 </script>
 <template>
 	<transition-group
@@ -256,11 +259,11 @@ const getImageUrl = (imagePath) => {
 			:data-index="index"
 			class="product shadow-xl transition duration-300 rounded-[10px] hover:shadow-2xl cursor-pointer pb-3"
 		>
-			<div class="space-y-2 relative group">
+			<div class="space-y-2 relative group" 	@click="handleSelected(product.id)">
 				<div class="">
 					<a-image
-                    @click="handleSelected(index)"
-						:src="getImageUrl(product.images[0]['image_path'])"
+                  
+						:src="getImageUrl(product?.images[0]['image_path'] ?? [])"
 						:preview="false"
 						class="object-fill"
 					/>
@@ -321,12 +324,12 @@ const getImageUrl = (imagePath) => {
 			</div>
 		</div>
 	</transition-group>
-	<p
+	<!-- <p
 		class="text-center ml-auto mr-auto mb-[20px] text-xl mt-5"
 		:class="loading ? 'text-[#39a39e]' : 'text-[#cf6363]'"
 	>
 		{{ loading ? "Đang tải thêm..." : "Không còn sản phẩm nào" }}
-	</p>
+	</p> -->
 </template>
 
 <style scoped>
