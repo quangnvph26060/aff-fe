@@ -11,6 +11,11 @@ const routes = [
 		name: "login",
 		component: () => import("../layouts/login.vue"),
 	},
+	{
+		path: "/:pathMatch(.*)*",
+		name: "NotFound",
+		component: () => import("../layouts/404.vue"),
+	},
 ];
 
 function isAuthenticated() {
