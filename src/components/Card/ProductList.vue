@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { reactive } from 'vue'
+import { reactive, defineProps  } from 'vue'
+import { useFormatCurrency } from "../../composables/useFormatCurrency";
 const router = useRouter()
 const productList: {
     index: number
@@ -171,10 +172,14 @@ const productList: {
         discounted_price: 600000,
     },
 ])
+const props = defineProps({
+  productId: Number,
+});
+console.log(props.productId);
 
 // xử lý chuyển trang
 const handleSelected = (index: number) => {
-    router.push('/products/describe')
+    router.push('/products/detail/102')
 }
 </script>
 <template>

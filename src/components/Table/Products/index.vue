@@ -4,7 +4,7 @@ import { useFormatCurrency } from "@/composables/useFormatCurrency";
 import { onMounted, reactive, ref } from "vue";
 import { gsap } from "gsap";
 import { ShoppingCartOutlined } from "@ant-design/icons-vue";
-
+import apiURL from "../../../connect.js";
 import Product from '../../../api/products/product.js';
 import Cart from '../../../api/carts/cart.js';
 import { useStore} from "vuex"
@@ -235,7 +235,7 @@ onMounted(() => {
 	});
 });
 const getImageUrl = (imagePath) => {
-  const baseUrl = 'http://127.0.0.1:8000';
+  const baseUrl = apiURL.URL;
   const modifiedImagePath = imagePath.replace('public', 'storage');
   return `${baseUrl}/${modifiedImagePath}`;
 };
@@ -262,29 +262,29 @@ const encodeId = (id) => {
 			<div class="space-y-2 relative group" 	@click="handleSelected(product.id)">
 				<div class="">
 					<a-image
-                  
-						:src="getImageUrl(product?.images[0]['image_path'] ?? [])"
+						v-if="product && product.images && product.images.length > 0"
+						:src="getImageUrl(product.images[0]['image_path'])"
 						:preview="false"
 						class="object-fill"
-					/>
+					></a-image>
 					<div
 						class="h-7 w-[40px] md:w-[60px] icon-center justify-center absolute top-[5px] right-[5px] bg-gradient-to-r from-rose-500 to-fuchsia-500 rounded-md text-center text-white text-sm"
 					>
-						{{ product.commission_rate }}%
+						{{ product?.commission_rate }}%
 					</div>
 				</div>
 				<div class="px-3 space-y-3 relative group">
 					<div class="text-xs font-thin text-slate-500">
-                        {{ product.name }}
+                        {{ product?.name }}
 					</div>
 					<div class="text-start md:text-base line-clamp-2">
-						{{ product.name }}
+						{{ product?.name }}
 					</div>
 					<div class="flex space-x-3">
 						<span
 							class="color-secondary self-center font-semibold inline-block align-middle"
 							>{{
-								useFormatCurrency(product.price)
+								useFormatCurrency(product?.price)
 							}}</span
 						>
 						<!-- <span
@@ -313,8 +313,8 @@ const encodeId = (id) => {
 								<ul
 									class="list-disc list-inside text-xs font-thin text-slate-500"
 								>
-                                <li>Loại: {{ product.category['name'] }}</li>
-									<li>Ngày tạo: {{ product.created_at }}</li>
+                                <li >Loại: {{ product?.category?.name }}</li>
+									<li>Ngày tạo: {{ product?.created_at }}</li>
 									<!-- <li>HSD: 1 tháng</li> -->
 								</ul>
 							</div>

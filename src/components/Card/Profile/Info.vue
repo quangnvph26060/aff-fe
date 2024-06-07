@@ -44,14 +44,14 @@ const editInfo = ref<boolean>(true);
 interface User {
 	name: string;
 	phone: string;
-	email: string;
+	
 	address: string;
 }
 
 const userData: User = {
 	name: "Nguyễn Văn A",
 	phone: "0121223214",
-	email: "testgmail@gmail.com",
+
 	address: "Mộ Lao, Hà Đông, Hà Nội",
 };
 
@@ -61,8 +61,6 @@ const formatLabel = (key: keyof User) => {
 			return "Tên";
 		case "phone":
 			return "Số điện thoại";
-		case "email":
-			return "Email";
 		case "address":
 			return "Địa chỉ";
 		default:
