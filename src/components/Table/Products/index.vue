@@ -259,13 +259,14 @@ const encodeId = (id) => {
 			:data-index="index"
 			class="product shadow-xl transition duration-300 rounded-[10px] hover:shadow-2xl cursor-pointer pb-3"
 		>
-			<div class="space-y-2 relative group" 	@click="handleSelected(product.id)">
+			<div class="space-y-2 relative group" 	>
 				<div class="">
 					<a-image
 						v-if="product && product.images && product.images.length > 0"
 						:src="getImageUrl(product.images[0]['image_path'])"
 						:preview="false"
 						class="object-fill"
+						@click="handleSelected(product.id)"
 					></a-image>
 					<div
 						class="h-7 w-[40px] md:w-[60px] icon-center justify-center absolute top-[5px] right-[5px] bg-gradient-to-r from-rose-500 to-fuchsia-500 rounded-md text-center text-white text-sm"
@@ -298,7 +299,7 @@ const encodeId = (id) => {
 
 					<div
 						class="overlay absolute" style="border: 1px solid;    position: relative;
-    bottom: 239px;"
+    				bottom: 239px;"
 					>
 						<div class="bg-white p-4 rounded-md">
 							<div class="flex justify-center">
