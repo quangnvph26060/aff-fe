@@ -3,12 +3,22 @@ import { useRouter } from "vue-router";
 import axios from 'axios';
 import { useStore} from "vuex";
 import { forEach } from 'lodash-es';
+
 export default function Cart() {
     const API_BACK_END = "http://127.0.0.1:8000/api/v1"
     // const headers = {
     //     'accept': 'application/json',
     //     'Authorization': 'Bearer ' + localStorage.getItem('token')
     // }
+    const showErrorPopup = (icon, message,status) => {
+        swal({
+            icon: icon,
+            html: message,
+            showConfirmButton: status,
+        });
+    };
+    const router = useRouter()
+    const swal = inject('$swal');
     const store = useStore();
     const user =  store.getters['user'];
     const responseCart = reactive({
@@ -23,7 +33,11 @@ export default function Cart() {
         }
         try {
             const response = await axios.post(`${API_BACK_END}/cart`,formData);
-            
+
+            if(response.data.status === 'success'){
+                showErrorPopup('success','Đã thêm vào giỏ hàng', false);
+            }
+
         } catch (error) {
             console.error(error);
         }
