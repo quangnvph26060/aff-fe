@@ -56,14 +56,25 @@ const getImageUrl = (imagePath) => {
                     :key="index"
 				>
 					<div class="flex gap-5 self-stretch text-stone-900">
-						<img
-							loading="lazy"
-							:src="getImageUrl(item.product.images[0].image_path)"
-							class="shrink-0 w-20 aspect-[0.98]"
-						/>
+						<a-image
+						v-if="item.product && item.product.images && item.product.images.length > 0"
+						:src="getImageUrl(item.product.images[0].image_path)"
+						:preview="false"
+						class="object-fill"
+						style="width: 100px; height: 100px;"
+						@click="handleSelected(product.id)"
+						></a-image>
+						<a-image
+						v-else
+						:src="'Capture.PNG'" 
+						:preview="false"
+						class="object-fill"
+						style="width: 100px; height: 100px;"
+						@click="handleSelected(product.id)"
+						></a-image>
 						<div class="flex flex-col my-auto">
-							<h3 class="text-lg">{{ item.product.name }}</h3>
-							<p class="mt-2.5 text-sm">Italy perfume</p>
+							<h3 class="text-lg ">{{ item.product.name }}</h3>
+							<p class="mt-2.5 text-sm text-gray" >{{ useFormatCurrency(item.product.price) }}</p>
 						</div>
 					</div>
 					<div

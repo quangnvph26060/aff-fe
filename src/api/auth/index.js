@@ -1,11 +1,11 @@
-//const baseURL = process.env.VITE_BACKEND_BASE_URL;
 import { useRouter } from "vue-router";
 import { ref, reactive, inject } from 'vue'
 import { useStore } from 'vuex';
 import store from '../../store/auth.js';
 import validator from "../validator/validator.js";
+import apiURL  from "../../connect.js";
 export default function Auth() {
-	const API_BACK_END = "http://127.0.0.1:8000/api/"
+	const API_BACK_END = apiURL.baseURL;
 	const loginForm = reactive({
         phone: '',
         password: '',
@@ -36,9 +36,20 @@ export default function Auth() {
             showConfirmButton: status,
         });
     };
-//	const store = useStore();
 	const router = useRouter()
 	const swal = inject('$swal');
+	// Hàm xử lý lỗi
+	const handleError = (error) => {
+		if (error.response) {
+			console.error('Server responded with a status:', error.response.status);
+			console.error('Response data:', error.response.data);
+		} else if (error.request) {
+			console.error('No response received:', error.request);
+		} else {
+			console.error('Error setting up the request:', error.message);
+		}
+		return error;
+	};
 	const validateFormRegister = async (formSignup) => {
 		let is_flag = true;
 		errors.confirmPassword = '';
@@ -103,7 +114,7 @@ export default function Auth() {
 			try {
 				const otp = Math.floor(Math.random() * 900000);
 				const formSignupWithOTP = { ...formSignup, otp };	
-				const response = await axios.post(`${API_BACK_END}v1/send-otp`, formSignupWithOTP);
+				const response = await axios.post(`${API_BACK_END}send-otp`, formSignupWithOTP);
 				if(response.data.status === 'success'){
 					var userJSON = JSON.stringify(response.data.data);
 					var encodedData = btoa(userJSON);
@@ -129,7 +140,7 @@ export default function Auth() {
 			var userObject = JSON.parse(decodedData);
 			if(userObject['otp'] === parseInt(formSignup['otp'])){
 				try {
-					const response = await axios.post(`${API_BACK_END}v1/register`, formSignup);
+					const response = await axios.post(`${API_BACK_END}register`, formSignup);
 					if(response.data.status === 'success'){
 						showErrorPopup('success','Đăng ký thành công',true);
 					//	await router.push({ name: 'login' })
@@ -174,7 +185,7 @@ export default function Auth() {
             return;
         }
 		try {
-			const response = await axios.post(`${API_BACK_END}v1/login`, loginForm);
+			const response = await axios.post(`${API_BACK_END}login`, loginForm);
 			console.log(response.data.role);
 			if(response.data.status === 'error'||
 				response.data.role === "Admin"
@@ -209,7 +220,7 @@ export default function Auth() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
         try {
-            const { data } = await axios.post(`${API_BACK_END}v1/auth/logout `, {}, { headers: headers });
+            const { data } = await axios.post(`${API_BACK_END}auth/logout `, {}, { headers: headers });
             if (data.status == 'success') {
                 await store.dispatch('logout')
 				await router.push({ name: 'login' })
@@ -217,76 +228,26 @@ export default function Auth() {
         } catch ({ res }) {
             await store.dispatch('logout')
         }
-        // if (router.currentRoute.value.name == 'Home') {
-        //     window.location.reload(true);
-        //     return
-        // }
-        // await router.push({ name: 'login' })
     }
+	const editUserInfo = async (id) => {
+		const headers = {
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+        try {
+            const  response  = await axios.post(`${API_BACK_END}auth/edit-user-info`, {id}, { headers: headers });
+
+        } catch (error) {
+			throw handleError(error);
+        }
+	}
 	return {
-		
 		loginForm,
 		submitLogin,
 		logout,
 		errors,
 		resultOtp,
-		submitResgiter
+		submitResgiter,
+		editUserInfo
 	}
 }
-// Function to handle user registration
-
-// async function register(userData) {
-// 	try {
-// 		const response = await axios.post(`${baseURL}/register`, userData);
-// 		return response.data;
-// 	} catch (error) {
-// 		throw handleError(error);
-// 	}
-// }
-
-// // Function to handle user login
-// async function login(credentials) {
-// 	try {
-// 		const response = await axios.post(`${baseURL}/login`, credentials);
-// 		return response.data;
-// 	} catch (error) {
-// 		throw handleError(error);
-// 	}
-// }
-
-// // Function to handle user logout
-// async function logout() {
-// 	try {
-// 		const response = await axios.post(`${baseURL}/logout`, null, {
-// 			headers: {
-// 				Authorization: `Bearer ${getToken()}`,
-// 			},
-// 		});
-// 		return response.data;
-// 	} catch (error) {
-// 		throw handleError(error);
-// 	}
-// }
-
-// // Function to get token from localStorage
-// function getToken() {
-// 	const token = localStorage.getItem("token");
-// 	if (!token) {
-// 		throw new Error("Token not found");
-// 	}
-// 	return token;
-// }
-
-// // Function to handle errors
-// function handleError(error) {
-// 	if (error.response) {
-// 		return error.response.data;
-// 	} else if (error.request) {
-// 		return "No response from server";
-// 	} else {
-// 		return "Error setting up request";
-// 	}
-// }
-
-// export { register, login, logout };
-

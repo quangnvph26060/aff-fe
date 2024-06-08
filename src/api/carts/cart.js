@@ -23,6 +23,7 @@ export default function Cart() {
         }
         try {
             const response = await axios.post(`${API_BACK_END}/cart`,formData);
+            
         } catch (error) {
             console.error(error);
         }

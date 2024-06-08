@@ -257,13 +257,21 @@ const encodeId = (id) => {
 			v-for="(product, index) in responseProduct.data"
 			:key="index"
 			:data-index="index"
-			class="product shadow-xl transition duration-300 rounded-[10px] hover:shadow-2xl cursor-pointer pb-3"
-		>
+			class="">
+		
 			<div class="space-y-2 relative group" 	>
-				<div class="">
+				<div class="" >
 					<a-image
 						v-if="product && product.images && product.images.length > 0"
 						:src="getImageUrl(product.images[0]['image_path'])"
+						:preview="false"
+						class="object-fill"
+						@click="handleSelected(product.id)"
+						
+					></a-image>
+					<a-image
+						v-else
+						:src="('Capture.PNG')" 
 						:preview="false"
 						class="object-fill"
 						@click="handleSelected(product.id)"

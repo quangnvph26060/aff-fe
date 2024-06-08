@@ -25,12 +25,17 @@
 						</a-avatar>
 					</template>
 
-					<a-card-meta
-						title="Nguyễn Văn A"
-						description="testgmail@gmai.com"
-						class=""
-					>
-					</a-card-meta>
+				
+					<div class="ant-card-body">
+						<div class="ant-card-meta">
+							<div class="ant-card-meta-detail">
+								<div class="ant-card-meta-title">{{ user.name }}</div>
+								<div class="ant-card-meta-description">
+									{{ user.email }}
+								</div>
+							</div>
+						</div>
+					</div>
 					<template #actions>
 						<div class="flex flex-col md:flex-row md:space-x-4">
 							<a-button
@@ -45,13 +50,13 @@
 								class="bg-transparent border-0 hover:bg-white icon-center rounded-xl"
 							>
 								<TeamOutlined />
-								<div class="hidden md:block ml-2">Đội nhóm</div>
+								<div class="hidden md:block ml-2" @click="handleRoute('doinhom')">Đội nhóm</div>
 							</a-button>
 							<a-button
 								class="bg-transparent border-0 hover:bg-white icon-center rounded-xl"
 							>
 								<ToolOutlined />
-								<div class="hidden md:block ml-2">Đơn hàng</div>
+								<div class="hidden md:block ml-2"  @click="handleRoute('donhang')">Đơn hàng</div>
 							</a-button>
 						</div>
 					</template>
@@ -71,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { h } from "vue";
+// import { h } from "vue";
 import {
 	CodeSandboxOutlined,
 	TeamOutlined,
@@ -80,6 +85,32 @@ import {
 import CardProfileSetting from "@/components/Card/Profile/Setting.vue";
 import CardProfileInfo from "@/components/Card/Profile/Info.vue";
 import CardProfileAuthInfo from "@/components/Card/Profile/AuthInfo.vue";
+import { handleError, onMounted, ref } from 'vue';
+import { useRouter } from "vue-router";
+import { useStore} from "vuex";
+const store = useStore();
+const user = ref('');
+const router = useRouter()
+onMounted(async () => {
+	const userdata = await store.getters['user'];
+	user.value = userdata;
+	console.log(user.value);
+	
+});
+
+function handleRoute(value){
+	switch(value){
+		case 'doinhom':
+		 router.push({ name: 'teams' })
+			break;
+		case 'donhang':
+		router.push({ name: 'orders' })
+			break;
+		default:
+		router.push({ name: 'profile' })
+	}
+
+}
 </script>
 
 <style>
