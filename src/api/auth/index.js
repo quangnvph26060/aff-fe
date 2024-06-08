@@ -235,7 +235,7 @@ export default function Auth() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
         try {
-            const  response  = await axios.post(`${API_BACK_END}auth/edit-user-info`, {id}, { headers: headers });
+            const  response  = await axios.post(`${API_BACK_END}/auth/edit-user-info`, {id}, { headers: headers });
 
         } catch (error) {
 			throw handleError(error);
