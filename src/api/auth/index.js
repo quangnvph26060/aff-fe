@@ -119,6 +119,7 @@ export default function Auth() {
 					var userJSON = JSON.stringify(response.data.data);
 					var encodedData = btoa(userJSON);
 					localStorage.setItem('user',encodedData);
+					showErrorPopup('success','Đã gửi mã OTP về email của bạn', false);
 				} 
 			} catch (error) {
 				resultOtp.status = false;
