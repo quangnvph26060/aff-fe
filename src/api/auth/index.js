@@ -9,6 +9,7 @@ export default function Auth() {
 	const loginForm = reactive({
         phone: '',
         password: '',
+		type: 'fe',
     });
 	const resultOtp = reactive({
 		status: false,
@@ -212,7 +213,8 @@ export default function Auth() {
 			}
 			
 		} catch (error) {
-			throw handleError(error);
+			// throw handleError(error);
+			console.error(error)
 		}
 	}
 	const logout = async () => {
