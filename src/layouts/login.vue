@@ -130,7 +130,7 @@ const handleLogin = async () => {
 						alt="Logo"
 						class="shrink-0 aspect-square w-[22px]"
 					/>
-					<div class="flex-auto my-auto">AFFILIATE</div>
+					<div class="flex-auto my-auto">AFFILIATE </div>
 				</div>
 				<div
 					class="flex gap-10 justify-between self-stretch my-auto text-center text-gray-700"
