@@ -4,7 +4,15 @@ import { gsap } from "gsap";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import { ArrowRightOutlined, ClearOutlined } from "@ant-design/icons-vue";
 import Cart from '../../api/carts/cart.js';
-
+import { useStore} from "vuex";
+import apiURL  from "../../connect.js";
+const store = useStore();
+const user = ref('');
+const isModalVisible = ref(false);
+const randomUpperCase = ref('');
+const name = ref('');
+const phone = ref('');
+const address = ref('');
 const{getToCart, responseCart, delToCart, updateToCart} = Cart();
 interface FormState {
 	name: string;
@@ -18,10 +26,14 @@ const formState: FormState = reactive({
 	address: "",
 });
 const totalPrice = ref('');
-const data = ref('');
+const data = ref([]);
 onMounted(async () => {
+	const userdata = await store.getters['user'];
+	user.value = userdata;
+	name.value = user.value.name;
+	phone.value = user.value.phone;
+	address.value = user.value.address;
     await getToCart();
-	console.log(responseCart.data);
 	
     data.value = responseCart.data;
 });
@@ -35,9 +47,42 @@ function delProduct(id){
     delToCart(id);
 }
 const getImageUrl = (imagePath) => {
-  const baseUrl = 'http://127.0.0.1:8000';
+  const baseUrl1 = 'http://127.0.0.1:8000';
+  const baseUrl = apiURL.URL;
   const modifiedImagePath = imagePath.replace('public', 'storage');
   return `${baseUrl}/${modifiedImagePath}`;
+};
+
+function handleSubmit (){
+		var result = '';
+		var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var charactersLength = characters.length;
+
+		for (var i = 0; i < 6; i++) {
+			var randomIndex = Math.floor(Math.random() * charactersLength);
+			var randomChar = characters.charAt(randomIndex);
+			result += randomChar;
+		}
+
+		randomUpperCase.value = result;
+		
+		
+		
+	isModalVisible.value = true;
+}
+const handleOk = () => {
+	const formDataOrder = reactive({
+        name: name.value,
+        address: address.value,
+        phone:phone.value,
+        list_product: data.value,
+		
+    });
+	console.log(formDataOrder);
+	
+};
+const handleCancel = () => {
+  isModalVisible.value = false;
 };
 </script>
 
@@ -110,21 +155,21 @@ const getImageUrl = (imagePath) => {
 					<a-form-item label="Họ và tên" class="mt-5 mb-2 text-white">
 						<a-input
 							class="h-[40px] custom-input"
-							v-model:value="formState.name"
+							v-model:value="name"
 							placeholder="ex: Nguyễn Văn A"
 						/>
 					</a-form-item>
 					<a-form-item class="mb-2" label="Số điện thoại">
 						<a-input
 							class="h-[40px]"
-							v-model:value="formState.phone"
+							v-model:value="phone"
 							placeholder="ex: 0987654321"
 						/>
 					</a-form-item>
 					<a-form-item class="mb-2" label="Địa chỉ">
 						<a-input
 							class="h-[40px]"
-							v-model:value="formState.address"
+							v-model:value="address"
 							placeholder="ex: 123 Đường ABC, Phường XYZ, Quận 1"
 						/>
 					</a-form-item>
@@ -149,7 +194,7 @@ const getImageUrl = (imagePath) => {
 							</div>
 						</div>
 					</section>
-					<a-form-item class="mt-5">
+					<a-form-item class="mt-5" :onclick="handleSubmit">
 						<a-button
 							type="primary"
 							class="w-full h-[60px] flex justify-between items-center text-base bg-secondary"
@@ -157,11 +202,28 @@ const getImageUrl = (imagePath) => {
 							<span class="font-semibold">{{
 								 useFormatCurrency(responseCart.total)
 							}}</span>
-							<span class="font-semibold">
+							<span class="font-semibold" >
 								Thanh toán <ArrowRightOutlined class="ml-2" />
 							</span>
 						</a-button>
 					</a-form-item>
+					
+					<a-modal
+					v-model:visible="isModalVisible"
+					title="Thanh toán"
+					@cancel="handleCancel"
+					>
+						<div style="text-align: center;">
+							<img src="#" alt="Hình ảnh" style="width: 100%;" />
+						</div>
+						<p style="text-align: center;">Nội dung chuyển khoản: <span class="font-weight-bold">{{ randomUpperCase }}</span></p>
+						<template #footer>
+							<a-button @click="handleCancel">Hủy</a-button>
+							<a-button type="primary" class="bg-secondary" @click="handleOk">Xác nhận</a-button>
+						</template>
+					</a-modal>
+
+					
 				</a-form>
 			</section>
 		</div>
