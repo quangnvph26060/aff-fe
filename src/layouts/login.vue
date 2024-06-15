@@ -119,7 +119,7 @@ const handleLogin = async () => {
 <template>
 	<div class="flex justify-center">
 		<!-- begin::Header -->
-		<header class="hidden md:flex fixed z-10 flex-col mt-6 w-4/5">
+		<!-- <header class="hidden md:flex fixed z-10 flex-col mt-6 w-4/5">
 			<nav
 				class="flex gap-5 justify-between items-center px-6 py-5 w-full text-xs font-bold leading-4 rounded-2xl border-2 border-white border-solid shadow-lg backdrop-blur-md bg-white/30"
 			>
@@ -148,7 +148,7 @@ const handleLogin = async () => {
 					class="justify-center self-stretch px-2 py-2.5 text-center text-white rounded-[34.5px] max-md:px-5"
 				></button>
 			</nav>
-		</header>
+		</header> -->
 		<!-- end::Header -->
 
 		<!-- begin::Login -->

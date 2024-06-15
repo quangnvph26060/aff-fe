@@ -6,21 +6,26 @@ import validator from "../validator/validator.js";
 import apiURL  from "../../connect.js";
 export default function Order() {
 	const API_BACK_END = apiURL.baseURL;
-    const formDataOrder = reactive({
-        name: '',
-        address: '',
-        phone:'',
-        list_product: [],
+    // const formDataOrder = reactive({
+    //     name: '',
+    //     address: '',
+    //     phone:'',
+    //     list_product: [],
+    //     zip_code:''
 		
-    });
+    // });
+    const router = useRouter();
     const headers = {
         'accept': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
-    const submitOrder = async () => {
+    const submitOrder = async (formDataOrder) => {
         try {
-            const  response  = await axios.post(`${API_BACK_END}/auth/createorder`,formDataOrder, { headers: headers });
-
+            const  response  = await axios.post(`${API_BACK_END}createorder`,formDataOrder, { headers: headers });
+            console.log(response.status === 'success');
+                if(response.data.status === 'success'){
+                    await router.push({ name: 'InformationLine' })
+                }
         } catch (error) {
 			throw handleError(error);
         }

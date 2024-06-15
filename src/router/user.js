@@ -47,6 +47,11 @@ const user = [
 				component: () => import("../pages/orders/index.vue"),
 			},
 			{
+				path: "information-line",
+				name: "InformationLine",
+				component: () => import("../pages/orders/success.vue"),
+			},
+			{
 				path: "teams",
 				name: "teams",
 				component: () => import("../pages/teams/index.vue"),

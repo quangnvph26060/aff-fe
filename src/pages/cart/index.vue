@@ -3,6 +3,7 @@ import { ref, computed, reactive, watch, onMounted } from "vue";
 import { gsap } from "gsap";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import { ArrowRightOutlined, ClearOutlined } from "@ant-design/icons-vue";
+import Order from '../../api/order/order.js';
 import Cart from '../../api/carts/cart.js';
 import { useStore} from "vuex";
 import apiURL  from "../../connect.js";
@@ -13,7 +14,8 @@ const randomUpperCase = ref('');
 const name = ref('');
 const phone = ref('');
 const address = ref('');
-const{getToCart, responseCart, delToCart, updateToCart} = Cart();
+const{getToCart, responseCart, delToCart, updateToCart, clearCartUser} = Cart();
+const{ submitOrder} = Order();
 interface FormState {
 	name: string;
 	phone: string;
@@ -70,16 +72,21 @@ function handleSubmit (){
 		
 	isModalVisible.value = true;
 }
-const handleOk = () => {
-	const formDataOrder = reactive({
-        name: name.value,
-        address: address.value,
-        phone:phone.value,
-        list_product: data.value,
-		
-    });
-	console.log(formDataOrder);
-	
+const handleOk = async () => {
+  const formDataOrder = {
+		name: name.value,
+		receive_address: address.value,
+		phone: phone.value,
+		list_product: data.value,
+		zip_code: randomUpperCase.value,
+		total_money: responseCart.total,
+
+  	};
+
+  await submitOrder(formDataOrder);
+  await clearCartUser();
+  isModalVisible.value = false;
+ 
 };
 const handleCancel = () => {
   isModalVisible.value = false;
@@ -96,6 +103,7 @@ const handleCancel = () => {
 					You have {{ responseCart.data.length }} items in your cart
 				</p>
 				<article
+				v-if="responseCart.data.length > 0"
 					class="flex gap-5 justify-between items-center py-2.5 pr-10 pl-2.5 mt-8 w-full bg-white rounded-2xl shadow-sm max-md:flex-wrap max-md:pr-5 max-md:max-w-full"
 					v-for="(item, index) in responseCart.data"
                     :key="index"
@@ -142,6 +150,9 @@ const handleCancel = () => {
 						 <ClearOutlined class="text-xl cursor-pointer" @click="delProduct(item.id)"/>
 					</div>
 				</article>
+				<div v-else>
+						GIỏ hàng trống <RouterLink :to="{ name: 'products' }">Mua hàng</RouterLink>
+				</div>
 			</section>
 		</div>
 		<div
@@ -214,7 +225,7 @@ const handleCancel = () => {
 					@cancel="handleCancel"
 					>
 						<div style="text-align: center;">
-							<img src="#" alt="Hình ảnh" style="width: 100%;" />
+							<img src="https://tse2.mm.bing.net/th?id=OIP.24NG-YtLZLWYDOMAvVuhcgHaE8&pid=Api&P=0&h=220" alt="Hình ảnh" style="width: 100%;" />
 						</div>
 						<p style="text-align: center;">Nội dung chuyển khoản: <span class="font-weight-bold">{{ randomUpperCase }}</span></p>
 						<template #footer>
