@@ -3,25 +3,29 @@ import { ref, computed, reactive, watch, onMounted } from "vue";
 import { gsap } from "gsap";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import { ArrowRightOutlined, ClearOutlined } from "@ant-design/icons-vue";
+import Order from '../../api/order/order.js';
 import Cart from '../../api/carts/cart.js';
+import { useStore} from "vuex";
+import apiURL  from "../../connect.js";
+const store = useStore();
+const user = ref('');
+const isModalVisible = ref(false);
+const randomUpperCase = ref('');
+const name = ref('');
+const phone = ref('');
+const address = ref('');
+const{getToCart, responseCart, delToCart, updateToCart, clearCartUser} = Cart();
+const{ submitOrder} = Order();
 
-const{getToCart, responseCart, delToCart, updateToCart} = Cart();
-interface FormState {
-	name: string;
-	phone: string;
-	address: string;
-}
-
-const formState: FormState = reactive({
-	name: "",
-	phone: "",
-	address: "",
-});
 const totalPrice = ref('');
-const data = ref('');
+const data = ref([]);
 onMounted(async () => {
+	const userdata = await store.getters['user'];
+	user.value = userdata;
+	name.value = user.value.name;
+	phone.value = user.value.phone;
+	address.value = user.value.address;
     await getToCart();
-	console.log(responseCart.data);
 	
     data.value = responseCart.data;
 });
@@ -35,9 +39,48 @@ function delProduct(id){
     delToCart(id);
 }
 const getImageUrl = (imagePath) => {
-  const baseUrl = 'http://127.0.0.1:8000';
+  const baseUrl1 = 'http://127.0.0.1:8000';
+  const baseUrl = apiURL.URL;
   const modifiedImagePath = imagePath.replace('public', 'storage');
   return `${baseUrl}/${modifiedImagePath}`;
+};
+
+function handleSubmit (){
+	var result = '';
+	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var charactersLength = characters.length;
+
+	for (var i = 0; i < 6; i++) {
+		var randomIndex = Math.floor(Math.random() * charactersLength);
+		var randomChar = characters.charAt(randomIndex);
+		result += randomChar;
+	}
+
+	randomUpperCase.value = result;
+
+
+	if(responseCart.data.length > 0  )	{
+		isModalVisible.value = true;
+	}
+}
+const handleOk = async () => {
+  const formDataOrder = {
+		name: name.value,
+		receive_address: address.value,
+		phone: phone.value,
+		list_product: data.value,
+		zip_code: randomUpperCase.value,
+		total_money: responseCart.total,
+
+  	};
+
+  await submitOrder(formDataOrder);
+  await clearCartUser();
+  isModalVisible.value = false;
+ 
+};
+const handleCancel = () => {
+  isModalVisible.value = false;
 };
 </script>
 
@@ -51,6 +94,7 @@ const getImageUrl = (imagePath) => {
 					You have {{ responseCart.data.length }} items in your cart
 				</p>
 				<article
+				v-if="responseCart.data.length > 0"
 					class="flex gap-5 justify-between items-center py-2.5 pr-10 pl-2.5 mt-8 w-full bg-white rounded-2xl shadow-sm max-md:flex-wrap max-md:pr-5 max-md:max-w-full"
 					v-for="(item, index) in responseCart.data"
                     :key="index"
@@ -97,6 +141,9 @@ const getImageUrl = (imagePath) => {
 						 <ClearOutlined class="text-xl cursor-pointer" @click="delProduct(item.id)"/>
 					</div>
 				</article>
+				<div v-else>
+						GIỏ hàng trống <RouterLink :to="{ name: 'products' }">Mua hàng</RouterLink>
+				</div>
 			</section>
 		</div>
 		<div
@@ -106,25 +153,25 @@ const getImageUrl = (imagePath) => {
 				<h1 class="flex-auto my-auto">Thông tin nhận hàng</h1>
 			</header>
 			<section>
-				<a-form layout="vertical" :model="formState" class="text-white">
+				<a-form layout="vertical"  class="text-white">
 					<a-form-item label="Họ và tên" class="mt-5 mb-2 text-white">
 						<a-input
 							class="h-[40px] custom-input"
-							v-model:value="formState.name"
+							v-model:value="name"
 							placeholder="ex: Nguyễn Văn A"
 						/>
 					</a-form-item>
 					<a-form-item class="mb-2" label="Số điện thoại">
 						<a-input
 							class="h-[40px]"
-							v-model:value="formState.phone"
+							v-model:value="phone"
 							placeholder="ex: 0987654321"
 						/>
 					</a-form-item>
 					<a-form-item class="mb-2" label="Địa chỉ">
 						<a-input
 							class="h-[40px]"
-							v-model:value="formState.address"
+							v-model:value="address"
 							placeholder="ex: 123 Đường ABC, Phường XYZ, Quận 1"
 						/>
 					</a-form-item>
@@ -149,7 +196,7 @@ const getImageUrl = (imagePath) => {
 							</div>
 						</div>
 					</section>
-					<a-form-item class="mt-5">
+					<a-form-item class="mt-5" :onclick="handleSubmit">
 						<a-button
 							type="primary"
 							class="w-full h-[60px] flex justify-between items-center text-base bg-secondary"
@@ -157,11 +204,28 @@ const getImageUrl = (imagePath) => {
 							<span class="font-semibold">{{
 								 useFormatCurrency(responseCart.total)
 							}}</span>
-							<span class="font-semibold">
+							<span class="font-semibold" >
 								Thanh toán <ArrowRightOutlined class="ml-2" />
 							</span>
 						</a-button>
 					</a-form-item>
+					
+					<a-modal
+					v-model:visible="isModalVisible"
+					title="Thanh toán"
+					@cancel="handleCancel"
+					>
+						<div style="text-align: center;">
+							<img src="https://tse2.mm.bing.net/th?id=OIP.24NG-YtLZLWYDOMAvVuhcgHaE8&pid=Api&P=0&h=220" alt="Hình ảnh" style="width: 100%;" />
+						</div>
+						<p style="text-align: center;">Nội dung chuyển khoản: <span class="font-weight-bold">{{ randomUpperCase }}</span></p>
+						<template #footer>
+							<a-button @click="handleCancel">Hủy</a-button>
+							<a-button type="primary" class="bg-secondary" @click="handleOk">Xác nhận</a-button>
+						</template>
+					</a-modal>
+
+					
 				</a-form>
 			</section>
 		</div>
