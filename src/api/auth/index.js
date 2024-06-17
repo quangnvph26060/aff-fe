@@ -120,6 +120,7 @@ export default function Auth() {
 					var userJSON = JSON.stringify(response.data.data);
 					var encodedData = btoa(userJSON);
 					localStorage.setItem('user',encodedData);
+					showErrorPopup('success','Đã gửi mã OTP về email của bạn', false);
 				} 
 			} catch (error) {
 				resultOtp.status = false;
@@ -200,11 +201,11 @@ export default function Auth() {
 			// 	token: response.data.accessToken,
 			// });
 			if (response.data.status == 'success') {
-				await swal({
-					icon: 'success',
-					title: 'Đăng nhập thành công',
-					showConfirmButton: true,
-				})
+				// await swal({
+				// 	icon: 'success',
+				// 	title: 'Đăng nhập thành công',
+				// 	showConfirmButton: true,
+				// })
 				await store.dispatch('setTokenUser', { 'token': response.data.accessToken })
 				await store.dispatch('getUser')
 				

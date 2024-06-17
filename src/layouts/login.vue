@@ -148,7 +148,7 @@ const handleLogin = async () => {
 					class="justify-center self-stretch px-2 py-2.5 text-center text-white rounded-[34.5px] max-md:px-5"
 				></button>
 			</nav>
-		</header> -->
+		</header>-->
 		<!-- end::Header -->
 
 		<!-- begin::Login -->
