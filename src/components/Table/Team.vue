@@ -1,6 +1,6 @@
 <template>
 	<a-table
-		:data-source="data"
+		:data-source="dataArr"
 		:columns="columns"
 		@change="onChange"
 		:pagination="pagination"
@@ -99,10 +99,18 @@
 	</a-table>
 </template>
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
-
+import Teams from "../../api/team/team.js";
+const {  responseTeam, getTeamMember} = Teams();
+const dataArr = ref([]);
+onMounted(async () => {
+  await getTeamMember();
+  dataArr.value = responseTeam.data;
+//   console.log(responseTeam.data);
+  
+});
 const state = reactive({
 	searchText: "",
 	searchedColumn: "",
@@ -130,7 +138,7 @@ const colorByLevel = (level: string) => {
 const columns = [
 	{
 		title: "Tài khoản",
-		dataIndex: "account",
+		dataIndex: "email",
 		width: 180,
 	},
 	{
