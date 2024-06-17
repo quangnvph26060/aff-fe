@@ -1,6 +1,6 @@
-
+import apiURL  from "../../connect.js";
 export default function Teams() {
-    const API_BACK_END = "http://127.0.0.1:8000/api/v1";
+    const API_BACK_END = apiURL.baseURL;
     const responseTeam = {
         data: [],
         teamRevenue: 0
@@ -12,7 +12,7 @@ export default function Teams() {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         }
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/v1/teammember`,{headers : headers});
+            const response = await axios.get(`${API_BACK_END}teammember`,{headers : headers});
            
             if (response.data.status === 'success') {
                 responseTeam.data = response.data.data;

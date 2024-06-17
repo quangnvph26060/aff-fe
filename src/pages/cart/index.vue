@@ -27,7 +27,7 @@ onMounted(async () => {
 	address.value = user.value.address;
     await getToCart();
 	
-    data.value = responseCart.data;
+    data.value = responseCart.data;	
 });
 
 
