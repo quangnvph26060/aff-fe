@@ -16,17 +16,7 @@ const phone = ref('');
 const address = ref('');
 const{getToCart, responseCart, delToCart, updateToCart, clearCartUser} = Cart();
 const{ submitOrder} = Order();
-interface FormState {
-	name: string;
-	phone: string;
-	address: string;
-}
 
-const formState: FormState = reactive({
-	name: "",
-	phone: "",
-	address: "",
-});
 const totalPrice = ref('');
 const data = ref([]);
 onMounted(async () => {
@@ -56,21 +46,22 @@ const getImageUrl = (imagePath) => {
 };
 
 function handleSubmit (){
-		var result = '';
-		var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var charactersLength = characters.length;
+	var result = '';
+	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var charactersLength = characters.length;
 
-		for (var i = 0; i < 6; i++) {
-			var randomIndex = Math.floor(Math.random() * charactersLength);
-			var randomChar = characters.charAt(randomIndex);
-			result += randomChar;
-		}
+	for (var i = 0; i < 6; i++) {
+		var randomIndex = Math.floor(Math.random() * charactersLength);
+		var randomChar = characters.charAt(randomIndex);
+		result += randomChar;
+	}
 
-		randomUpperCase.value = result;
-		
-		
-		
-	isModalVisible.value = true;
+	randomUpperCase.value = result;
+
+
+	if(responseCart.data.length > 0  )	{
+		isModalVisible.value = true;
+	}
 }
 const handleOk = async () => {
   const formDataOrder = {
@@ -162,7 +153,7 @@ const handleCancel = () => {
 				<h1 class="flex-auto my-auto">Thông tin nhận hàng</h1>
 			</header>
 			<section>
-				<a-form layout="vertical" :model="formState" class="text-white">
+				<a-form layout="vertical"  class="text-white">
 					<a-form-item label="Họ và tên" class="mt-5 mb-2 text-white">
 						<a-input
 							class="h-[40px] custom-input"
