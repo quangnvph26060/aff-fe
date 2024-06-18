@@ -1,6 +1,6 @@
 <template>
 	<a-table
-		:data-source="data"
+		:data-source="dataTransaction.data"
 		:columns="columns"
 		:pagination="pagination"
 		:scroll="{ x: 1200 }"
@@ -97,26 +97,22 @@
 					class="inline-flex items-center"
 				>
 					<template #icon>
-						<sync-outlined :spin="true" v-if="text === 0" />
+						<sync-outlined :spin="true" v-if="text === 'pending'" />
 						<check-circle-outlined v-else />
 					</template>
-					{{ text === 0 ? "chờ xác nhận" : "đã thanh toán" }}</a-tag
+					{{ text === 'pending' ? "chờ xác nhận" : "đã thanh toán" }}</a-tag
 				>
 			</template>
 			<template v-else-if="column.dataIndex === 'balance'">
-				{{ useFormatCurrency(text) }}
+				{{ useFormatCurrency(text)}} 
 			</template>
-			<template v-else-if="column.dataIndex === 'balance_received'">
-				{{ useFormatCurrency(text) }}
-			</template>
-			<template v-else-if="column.dataIndex === 'tax'">
-				{{ useFormatCurrency(text) }}
-			</template>
+			
+			
 		</template>
 	</a-table>
 </template>
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import {
 	SearchOutlined,
 	SyncOutlined,
@@ -124,7 +120,15 @@ import {
 } from "@ant-design/icons-vue";
 
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
-
+import Wallet from '../../api/wallet/index.js';
+const { responseWallet, getTransactionAll} = Wallet();
+const dataTransaction = ref([]);
+onMounted(async () => {
+	await getTransactionAll();
+	dataTransaction.value = responseWallet.data;
+	console.log(dataTransaction.value);
+	
+});
 const state = reactive({
 	searchText: "",
 	searchedColumn: "",
@@ -132,28 +136,37 @@ const state = reactive({
 
 const searchInput = ref();
 
-const colorByStatus = (status: number) => {
-	switch (status) {
-		case 0:
-			return "processing";
-		case 1:
-			return "success";
-		default:
-			return "";
-	}
+const colorByStatus = (status: string) => {
+  switch (status) {
+    case "pending":
+      return "processing";
+    case "completed":
+      return "success";
+    default:
+      return "";
+  }
 };
+
 
 const columns = [
 	{
 		title: "Kỳ đối soát",
-		dataIndex: "period",
+		dataIndex: "created_at",
+	},
+	{
+		title: "Ví",
+		dataIndex: "wallet_id",
+		 customRender: ({ text }) => text === 1 ? "Ví chính" : "Ví thưởng"
 	},
 	{
 		title: "Số dư trong kỳ",
-		dataIndex: "balance",
+		dataIndex: "amount",
 		sorter: {
 			compare: (a, b) => a.balance - b.balance,
 		},
+		customRender: ({ text, record }) => {
+            return useFormatCurrency(record.amount);
+        },
 	},
 	{
 		title: "Thuế thu nhập",
@@ -161,6 +174,9 @@ const columns = [
 		sorter: {
 			compare: (a, b) => a.tax - b.tax,
 		},
+		customRender: ({ text, record }) => {
+            return useFormatCurrency(record.amount ? (record.amount * 0.1) : '0');
+        },
 	},
 	{
 		title: "Số dư thực nhận",
@@ -168,15 +184,19 @@ const columns = [
 		sorter: {
 			compare: (a, b) => a.balance_received - b.balance_received,
 		},
+		customRender: ({ text, record }) => {
+    		const balanceReceived =  record.amount -  (record.amount * 0.1);
+			return useFormatCurrency(balanceReceived);
+  	},
 	},
 	{
 		title: "Trạng thái",
 		dataIndex: "status",
 		filters: [
-			{ text: "đã thanh toán", value: 1 },
-			{ text: "chờ xác nhận", value: 0 },
+			{ text: "đã thanh toán", value: 'completed' },
+			{ text: "chờ xác nhận", value: 'pending'  },
 		],
-		onFilter: (value, record) => record.level.indexOf(value) === 0,
+		onFilter: (value, record) => record.level.indexOf(value) === 'pending',
 	},
 ];
 

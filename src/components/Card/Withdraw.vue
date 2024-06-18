@@ -95,7 +95,7 @@ const handleChange = (value: string) => {
 					<a-select-option value="0">Tiền mặt</a-select-option>
 					<a-select-option value="1">Chuyển khoản</a-select-option>
 				</a-select>
-				<p v-if="Error.method === true" style="color: red;">Vui lòng chọn phương thức</p>
+				<!-- <p v-if="Error.method === true" style="color: red;">Vui lòng chọn phương thức</p> -->
 				<a-input-number
 					v-model:value="withdraw"
 					:formatter="
