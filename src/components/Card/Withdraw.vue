@@ -13,7 +13,7 @@ const balance2 =  ref<Number>(0);
 const withdraw = ref<Number>(0); 
 const wallet_type = ref<Number>(1);
 const inputPrice = ref();
-const inputWallet = ref();
+const inputWallet = ref("");
 onMounted(async () => {
 	const userdata = await store.getters['user'];
 	user.value = userdata;
@@ -24,14 +24,19 @@ onMounted(async () => {
 	
 	
 });
-
+const Error = ref({
+  method: false
+});
 async function btnTransaction() {
-  formData.wallet_type = wallet_type.value;
-  formData.amount = withdraw.value;
-  formData.method = inputWallet.value;
-  console.log(formData);
-  
-  await postTransactionRequest(formData);
+	Error.value.method = false;
+	formData.wallet_type = wallet_type.value;
+	formData.amount = withdraw.value;
+	formData.method = inputWallet.value;
+	if (formData.method === "") {
+		Error.value.method = true;
+		return;
+	}
+  	await postTransactionRequest(formData);
 }
 const method = ref("Chọn phương thức");
 const method1 = ref("Chọn ví");
@@ -90,7 +95,7 @@ const handleChange = (value: string) => {
 					<a-select-option value="0">Tiền mặt</a-select-option>
 					<a-select-option value="1">Chuyển khoản</a-select-option>
 				</a-select>
-
+				<p v-if="Error.method === true" style="color: red;">Vui lòng chọn phương thức</p>
 				<a-input-number
 					v-model:value="withdraw"
 					:formatter="
