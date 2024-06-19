@@ -1,9 +1,17 @@
 <script lang="ts" setup>
-import { computed, ref, reactive } from "vue";
+import { computed, ref, reactive, onMounted } from "vue";
 import { SearchOutlined } from "@ant-design/icons-vue";
-
+import Order from "../../../api/order/order.js";
+import { useFormatCurrency } from "../../../composables/useFormatCurrency";
+const {  getOrder, responseOrder } = Order();
 const currentPage1 = ref(5);
-
+const dataArr = ref([]);
+onMounted(async () => {
+  await getOrder();
+  dataArr.value = responseOrder.data;
+  console.log(dataArr.value);
+  
+});
 const handleSizeChange = (val: number) => {
 	console.log(`${val} items per page`);
 };
@@ -85,23 +93,28 @@ const columns = [
 	},
 	{
 		title: "Ngày tạo",
-		dataIndex: "date",
+		dataIndex: "created_at",
 		width: 250,
+
 	},
 	{
 		title: "Trạng thái",
 		dataIndex: "status",
 		filters: [
-			{ text: "thành công", value: "success" },
-			{ text: "chờ giao", value: "processing" },
-			{ text: "không thành công", value: "error" },
+			{ text: "Chờ xử lý", value: 1 },
+			{ text: "Đang vận chuyển", value: 2 },
+			{ text: "Đã giao hàng", value: 3 },
+			{ text: "Đã hủy", value: 4 },
+			{ text: "Đã hoàn tiền", value: 5 },
+			{ text: "Tạm dừng", value: 6 },
+			{ text: "Thất bại", value: 7 },
 		],
-		onFilter: (value, record) => record.level.indexOf(value) === 0,
+		onFilter: (value, record) => record.level.indexOf(value) === 1,
 		width: 160,
 	},
 	{
 		title: "Tổng tiền",
-		dataIndex: "total",
+		dataIndex: "total_money",
 		sorter: {
 			compare: (a, b) => a.total - b.total,
 		},
@@ -126,14 +139,22 @@ const pagination = reactive({
 	onChange: (page, pageSize) => {},
 });
 
-function labelByStatus(status: string) {
+function labelByStatus(status: number) {
 	switch (status) {
-		case "success":
-			return "thành công";
-		case "processing":
-			return "chờ giao";
-		case "error":
-			return "không thành công";
+		case 1:
+			return "Chờ xử lý ";
+		case 2:
+			return "Đang vận chuyển";
+		case 3:
+			return "Đã giao hàng";
+		case 4:
+			return "Đã hủy";
+		case 5:
+			return "Đã hoàn tiền";
+		case 6:
+			return "Tạm dừng";
+		case 7:
+			return "Thất bại";
 		default:
 			return "";
 	}
@@ -143,7 +164,7 @@ function labelByStatus(status: string) {
 <template>
 	<a-table
 		:columns="columns"
-		:data-source="data"
+		:data-source="dataArr"
 		@change="onChange"
 		:pagination="pagination"
 		:scroll="{ x: 1200 }"
@@ -238,9 +259,14 @@ function labelByStatus(status: string) {
 			</template>
 			<template v-else-if="column.dataIndex === 'status'">
 				<div>
-					<a-tag :color="text">
+					<a-tag>
 						{{ labelByStatus(text) }}
 					</a-tag>
+				</div>
+			</template>
+			<template v-else-if="column.dataIndex === 'total_money'">
+				<div>
+					{{ useFormatCurrency(text) }}
 				</div>
 			</template>
 		</template>

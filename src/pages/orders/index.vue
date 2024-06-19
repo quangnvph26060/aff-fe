@@ -2,6 +2,17 @@
 import { CheckCircleOutlined } from "@ant-design/icons-vue";
 import TableOrder from "@/components/Table/Order/index.vue";
 import TableOrderOverview from "@/components/Table/Order/Overview.vue";
+import Order from "../../api/order/order.js";
+import { useFormatCurrency } from "../../composables/useFormatCurrency";
+import { onMounted, ref } from "vue";
+const {  getOrder, responseOrder } = Order();
+
+const dataCount = ref(0);
+onMounted(async () => {
+  await getOrder();
+  dataCount.value = responseOrder.count;
+  
+});
 </script>
 
 <template>
@@ -11,7 +22,7 @@ import TableOrderOverview from "@/components/Table/Order/Overview.vue";
 				<span class="font-bold">Quản lý đơn hàng</span>
 				<div class="flex items-center text-xs text-green-500 mt-1">
 					<CheckCircleOutlined class="mr-1" />
-					10 đơn thành công
+					{{ dataCount }} đơn thành công
 				</div>
 			</template>
 			<TableOrder />
