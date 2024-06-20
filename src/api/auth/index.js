@@ -9,7 +9,7 @@ export default function Auth() {
 	const loginForm = reactive({
         phone: '',
         password: '',
-		type: 'fe',
+		type: 'api',
     });
 	const resultOtp = reactive({
 		status: false,
