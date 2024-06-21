@@ -17,6 +17,10 @@ export default function Order() {
         data: [],
         count: 0
     };
+    const responseOrderDetail = {
+        data: [],
+        count: 0
+    };
     const router = useRouter();
     const headers = {
         'accept': 'application/json',
@@ -55,9 +59,25 @@ export default function Order() {
 			throw handleError(error);
         }
     }
+    const orderDetail = async () => {
+        const headers = {
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+        try {
+            const response  = await axios.get(`${API_BACK_END}order-detail`, { headers: headers });
+                if(response.data.status === 'success'){
+                     responseOrderDetail.data = response.data.data
+                }
+        } catch (error) {
+			throw handleError(error);
+        }
+    }
     return {
         submitOrder,
         getOrder,
-        responseOrder
+        responseOrder,
+        orderDetail,
+        responseOrderDetail
     }
 }
