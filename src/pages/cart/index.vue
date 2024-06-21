@@ -31,15 +31,15 @@ onMounted(async () => {
 });
 
 
-function handleChange(item,value) {
-    updateToCart(item.id, value)
+async function handleChange(item, value) {
+    await updateToCart(item.id, value);
+    await getToCart();
 }
 
 function delProduct(id){
     delToCart(id);
 }
 const getImageUrl = (imagePath) => {
-  const baseUrl1 = 'http://127.0.0.1:8000';
   const baseUrl = apiURL.URL;
   const modifiedImagePath = imagePath.replace('public', 'storage');
   return `${baseUrl}/${modifiedImagePath}`;
@@ -50,7 +50,7 @@ function handleSubmit (){
 	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var charactersLength = characters.length;
 
-	for (var i = 0; i < 6; i++) {
+	for (var i = 0; i < 8; i++) {
 		var randomIndex = Math.floor(Math.random() * charactersLength);
 		var randomChar = characters.charAt(randomIndex);
 		result += randomChar;
