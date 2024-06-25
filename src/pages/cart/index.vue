@@ -16,7 +16,7 @@ const phone = ref('');
 const address = ref('');
 const{getToCart, responseCart, delToCart, updateToCart, clearCartUser} = Cart();
 const{ submitOrder} = Order();
-
+const isLoading = ref(false);
 const totalPrice = ref('');
 const data = ref([]);
 onMounted(async () => {
@@ -64,7 +64,10 @@ function handleSubmit (){
 	}
 }
 const handleOk = async () => {
-  const formDataOrder = {
+	isLoading.value = true;
+	console.log(isLoading.value);
+	
+  	const formDataOrder = {
 		name: name.value,
 		receive_address: address.value,
 		phone: phone.value,
@@ -74,9 +77,17 @@ const handleOk = async () => {
 
   	};
 
-  await submitOrder(formDataOrder);
-  await clearCartUser();
-  isModalVisible.value = false;
+	try {
+		await submitOrder(formDataOrder);
+		await clearCartUser();
+		isModalVisible.value = false;
+	} catch (error) {
+		// Xử lý lỗi nếu có
+	} finally {
+		console.log(123);
+		
+		isLoading.value = false; 
+	}
  
 };
 const handleCancel = () => {
@@ -86,7 +97,7 @@ const handleCancel = () => {
 
 <template>
 	<div class="grid grid-cols-10 gap-6">
-		<div class="flex flex-col max-md:mt-10 col-span-10 lg:col-span-6">
+		<div class="flex flex-col max-md:mt-10 col-span-10 lg:col-span-6" >
 			<section
 				class="flex flex-col mt-5 font-medium text-neutral-700 max-md:max-w-full"
 			>
@@ -219,9 +230,12 @@ const handleCancel = () => {
 							<img src="https://tse2.mm.bing.net/th?id=OIP.24NG-YtLZLWYDOMAvVuhcgHaE8&pid=Api&P=0&h=220" alt="Hình ảnh" style="width: 100%;" />
 						</div>
 						<p style="text-align: center;">Nội dung chuyển khoản: <span class="font-weight-bold">{{ randomUpperCase }}</span></p>
-						<template #footer>
+						<template #footer v-if="isLoading != true">
 							<a-button @click="handleCancel">Hủy</a-button>
 							<a-button type="primary" class="bg-secondary" @click="handleOk">Xác nhận</a-button>
+						</template>
+						<template #footer v-else>
+							<p>loading...</p>
 						</template>
 					</a-modal>
 
