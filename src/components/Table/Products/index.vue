@@ -12,6 +12,15 @@ const {getProduct, responseProduct, findProduct} = Product();
 const{addToCart} = Cart();
 const store = useStore();
 const router = useRouter();
+
+function formatDate(dateTimeStr) {
+    const date = new Date(dateTimeStr);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
 const productList: {
 	index: number;
 	images: string;
@@ -261,7 +270,7 @@ const encodeId = (id) => {
 		
 			<div class="space-y-2 relative group" 	>
 				<div class="" >
-					<a-image
+					<a-image style="height: 190px; width: 250px;"
 						v-if="product && product.images && product.images.length > 0"
 						:src="getImageUrl(product.images[0]['image_path'])"
 						:preview="false"
@@ -323,7 +332,7 @@ const encodeId = (id) => {
 									class="list-disc list-inside text-xs font-thin text-slate-500"
 								>
                                 <li >Loại: {{ product?.category?.name }}</li>
-									<li>Ngày tạo: {{ product?.created_at }}</li>
+									<li>Ngày tạo:  {{ formatDate(product?.created_at) }}</li>
 									<!-- <li>HSD: 1 tháng</li> -->
 								</ul>
 							</div>
