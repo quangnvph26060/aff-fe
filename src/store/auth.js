@@ -4,6 +4,7 @@ const store = new Vuex.Store({
     state: {
         authenticated: false,
         user: {},
+        admin: {},
         token: localStorage.getItem('token') || 0,
     },
     getters: {
@@ -12,6 +13,9 @@ const store = new Vuex.Store({
         },
         user(state) {
             return state.user;
+        },
+        admin(state) {
+            return state.admin;
         },
         token(state) {
             return state.token
@@ -23,6 +27,9 @@ const store = new Vuex.Store({
         },
         setUser(state, user) {
             state.user = user;
+        },
+        setAdmin(state, admin) {
+            state.admin = admin;
         },
         setToken(state, token) {
             state.token = token;
@@ -53,12 +60,14 @@ const store = new Vuex.Store({
                     const { data } = await axios.get(`${API_BACK_END}v1/auth/get-user`, {headers : headers});
                     if (data.status == 'success') {
                         commit('setUser', data.data);
+                        commit('setAdmin', data.admin);
                         commit('SET_AUTHENTICATED', true);
                     }
                 }
             } catch ({ res }) {
                 localStorage.removeItem('token');
                 commit('setUser', {});
+                commit('setAdmin', {});
                 commit('SET_AUTHENTICATED', false);
             }
         },
@@ -66,6 +75,7 @@ const store = new Vuex.Store({
         async logout({commit}, token) {
             localStorage.removeItem('token');
             commit('setUser', {});
+            commit('setAdmin', {});
             commit('SET_AUTHENTICATED', false);
         }
     }
