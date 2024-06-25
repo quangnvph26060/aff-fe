@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import TableTeam from "../../components/Table/Team.vue";
+import TableTeammember from "../../components/Table/Teammember.vue";
 </script>
 
 <template>
 	<a-card title="Quản lý đội nhóm" :bordered="false" class="w-100">
-		<TableTeam />
+		<TableTeammember />
 	</a-card>
 </template>
 
