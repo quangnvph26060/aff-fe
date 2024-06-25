@@ -78,12 +78,13 @@ import { useRouter } from "vue-router";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import Teams from "../../api/team/team.js";
-const { responseTeam, getAllTeamMember } = Teams();
+import axios from 'axios'; // New import
+const { responseTeam, getTeamMember } = Teams();
 const dataArr = ref([]);
 onMounted(async () => {
-	await getAllTeamMember();
+	await getTeamMember();
 	dataArr.value = responseTeam.data;
-	//   console.log(responseTeam.data);
+	  console.log(responseTeam.data);
 
 });
 const state = reactive({
@@ -202,7 +203,7 @@ function onChange(pagination, filters, sorter, extra) {
 }
 const router = useRouter();
 const handleLinkClick = (id: number) => {
-	console.log('Link clicked for ID: ', id);;
+	console.log('Link clicked for ID: ', id);
 	router.push({name: 'team' ,params: { id }});
 };
 </script>
