@@ -44,7 +44,7 @@ const user = [
 				path: "memberlist/:id",
 				name: "team",
 				component: () =>
-					import("../components/Table/Teammember.vue"),
+					import("../pages/teams/indexteammember.vue"),
 			},
 			{
 				path: "orders",
