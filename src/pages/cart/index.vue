@@ -91,7 +91,7 @@ const handleCancel = () => {
 				class="flex flex-col mt-5 font-medium text-neutral-700 max-md:max-w-full"
 			>
 				<p class="mt-1 text-sm text-stone-900 max-md:max-w-full">
-					You have {{ responseCart.data.length }} items in your cart
+					Bạn có {{ responseCart.data.length }} sản phẩm trong giỏ hàng
 				</p>
 				<article
 				v-if="responseCart.data.length > 0"

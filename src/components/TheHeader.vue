@@ -17,10 +17,7 @@ function toggleModal() {
 }
 const searchInput = ref("");
 
-const breadcrumbItems = [
-	{ title: "Homepage", path: "/" },
-	{ title: "Dashboard", path: "/dashboard" },
-];
+
 
 const handleLogout = () => {
 	 logout();
