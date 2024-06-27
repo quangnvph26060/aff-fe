@@ -31,7 +31,7 @@
                                                 <!--end col-->
                                                 <div class="col-lg-3 col-6">
                                                     <p class="text-muted mb-2 text-uppercase fw-semibold">Tổng tiền</p>
-                                                    <h5 class="fs-14 mb-0"><span id="total-amount">{{data.total_money}}đ</span></h5>
+                                                    <h5 class="fs-14 mb-0"><span id="total-amount">{{useFormatCurrency(data.total_money)}}</span></h5>
                                                 </div>
                                                 <!--end col-->
                                             </div>
@@ -87,11 +87,11 @@
                                                             <th scope="row">{{ index + 1 }}</th>
                                                             <td class="text-start">
                                                                 <span class="fw-medium">{{ item.product.name }}</span>
-                                                                <p class="text-muted mb-0">{{ item.product.description}}</p>
+                                                              
                                                             </td>
-                                                            <td>{{ item.product.price }}</td>
+                                                            <td>{{ useFormatCurrency(item.product.price) }}</td>
                                                             <td>{{ item.quantity }}</td> 
-                                                            <td class="text-end">{{item.product.price *  item.quantity  }}đ</td>
+                                                            <td class="text-end">{{ useFormatCurrency(item.product.price *  item.quantity ) }}</td>
                                                         </tr>
                                                         
                                                         
@@ -106,7 +106,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>Tổng phụ : </td>
-                                                            <td class="text-end">{{ data.total_money }}</td>
+                                                            <td class="text-end">{{ useFormatCurrency(data.total_money) }}</td>
                                                         </tr>
                                                         <!-- <tr>
                                                             <td>Estimated Tax (12.5%)</td>
@@ -123,7 +123,7 @@
                                                         </tr> -->
                                                         <tr class="border-top border-top-dashed fs-15">
                                                             <th scope="row">Tổng cộng : </th>
-                                                            <th class="text-end">{{ data.total_money }}đ</th>
+                                                            <th class="text-end">{{ useFormatCurrency(data.total_money )}}</th>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -139,7 +139,7 @@
                                                 <p class="text-muted mb-1">Số thẻ: <span class="fw-medium"
                                                         id="card-number">xxx xxxx xxxx 1234</span></p>
                                                 <p class="text-muted">Tổng tiền: <span class="fw-medium" id="">
-                                                    </span>{{data.total_money}}đ<span id="card-total-amount"></span></p>
+                                                    </span>{{useFormatCurrency(data.total_money)}}<span id="card-total-amount"></span></p>
                                             </div>
                                             <div class="mt-4">
                                                 <div class="alert alert-info">
@@ -169,6 +169,7 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import Order from "../../api/order/order";
+import { useFormatCurrency } from '../../composables/useFormatCurrency';
     const {orderDetail, responseOrderDetail} = Order();
     const data = ref();
     onMounted(async() => {

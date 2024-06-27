@@ -1,115 +1,90 @@
 <template>
-	<a-table
-		:data-source="dataArr"
-		:columns="columns"
-		@change="onChange"
-		:pagination="pagination"
-		:scroll="{ x: 1200 }"
-	>
-		<template
-			#customFilterDropdown="{
-				setSelectedKeys,
-				selectedKeys,
-				confirm,
-				clearFilters,
-				column,
-			}"
-		>
+	<a-table :data-source="dataArr" :columns="columns" @change="onChange" :pagination="pagination"
+		:scroll="{ x: 1200 }">
+		<template #customFilterDropdown="{
+			setSelectedKeys,
+			selectedKeys,
+			confirm,
+			clearFilters,
+			column,
+		}">
 			<div style="padding: 8px">
-				<a-input
-					ref="searchInput"
-					:placeholder="`Tìm ${column.title}`"
-					:value="selectedKeys[0]"
-					style="width: 188px; margin-bottom: 8px; display: block"
-					@change="
-						(e) =>
+				<a-input ref="searchInput" :placeholder="`Tìm ${column.title}`" :value="selectedKeys[0]"
+					style="width: 188px; margin-bottom: 8px; display: block" @change="(e) =>
 							setSelectedKeys(
 								e.target.value ? [e.target.value] : []
 							)
-					"
-					@pressEnter="
+						" @pressEnter="
 						handleSearch(selectedKeys, confirm, column.dataIndex)
-					"
-				/>
-				<a-button
-					type="primary"
-					size="small"
-					style="width: 90px; margin-right: 8px"
-					@click="
-						handleSearch(selectedKeys, confirm, column.dataIndex)
-					"
-				>
-					<template #icon><SearchOutlined /></template>
+						" />
+				<a-button type="primary" size="small" style="width: 90px; margin-right: 8px" @click="
+					handleSearch(selectedKeys, confirm, column.dataIndex)
+					">
+					<template #icon>
+						<SearchOutlined />
+					</template>
 					Tìm
 				</a-button>
-				<a-button
-					size="small"
-					style="width: 90px"
-					@click="handleReset(clearFilters)"
-				>
+				<a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
 					Đặt lại
 				</a-button>
 			</div>
 		</template>
 		<template #customFilterIcon="{ filtered }">
-			<search-outlined
-				:style="{ color: filtered ? '#108ee9' : undefined }"
-			/>
+			<search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
 		</template>
 		<template #bodyCell="{ text, column, record }">
-			<span
-				v-if="
-					state.searchText &&
-					state.searchedColumn === column.dataIndex
-				"
-			>
-				<template
-					v-for="(fragment, i) in text
-						.toString()
-						.split(
-							new RegExp(
-								`(?<=${state.searchText})|(?=${state.searchText})`,
-								'i'
-							)
-						)"
-				>
-					<mark
-						v-if="
-							fragment.toLowerCase() ===
-							state.searchText.toLowerCase()
-						"
-						:key="i"
-						class="highlight"
-					>
+			<span v-if="
+				state.searchText &&
+				state.searchedColumn === column.dataIndex
+			">
+				<template v-for="(fragment, i) in text
+					.toString()
+					.split(
+						new RegExp(
+							`(?<=${state.searchText})|(?=${state.searchText})`,
+							'i'
+						)
+					)">
+					<mark v-if="
+						fragment.toLowerCase() ===
+						state.searchText.toLowerCase()
+					" :key="i" class="highlight">
 						{{ fragment }}
 					</mark>
 					<template v-else>{{ fragment }}</template>
 				</template>
 			</span>
-			<template v-if="column.dataIndex === 'level'">
-				<a-tag :color="colorByLevel(text)">{{ text }}</a-tag>
-			</template>
-			<template v-else-if="column.dataIndex === 'personal_sale'">
-				{{ useFormatCurrency(text) }}
-			</template>
-			<template v-else-if="column.dataIndex === 'team_sale'">
-				{{ useFormatCurrency(text) }}
+			<template v-else>
+				<template v-if="column.dataIndex === 'name'">
+					<a @click="handleLinkClick(record.id)">{{ text }}</a>
+				</template>
+				<template v-if="column.dataIndex === 'level'">
+					<a-tag :color="colorByLevel(text)">{{ text }}</a-tag>
+				</template>
+				<template v-else-if="column.dataIndex === 'personal_sale'">
+					{{ useFormatCurrency(text) }}
+				</template>
+				<template v-else-if="column.dataIndex === 'team_sale'">
+					{{ useFormatCurrency(text) }}
+				</template>
 			</template>
 		</template>
 	</a-table>
 </template>
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { SearchOutlined } from "@ant-design/icons-vue";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import Teams from "../../api/team/team.js";
-const {  responseTeam, getTeamMember} = Teams();
+const { responseTeam, getAllTeamMember } = Teams();
 const dataArr = ref([]);
 onMounted(async () => {
-  await getTeamMember();
-  dataArr.value = responseTeam.data;
-//   console.log(responseTeam.data);
-  
+	await getAllTeamMember();
+	dataArr.value = responseTeam.data;
+	  console.log(responseTeam.data);
+
 });
 const state = reactive({
 	searchText: "",
@@ -155,6 +130,7 @@ const columns = [
 			}
 		},
 		width: 250,
+		scopedSlots: { customRender: 'name' }
 	},
 	{
 		title: "Mã thành viên",
@@ -202,63 +178,12 @@ const columns = [
 	},
 ];
 
-const data = [
-	{
-		account: "Tom",
-		name: "Nguyen Van A",
-		id: 1,
-		personal_sale: 100000,
-		team_sale: 1000000,
-		level: "F1",
-	},
-	{
-		account: "Tom",
-		name: "Nguyen Van B",
-		id: 2,
-		personal_sale: 200000,
-		team_sale: 2000000,
-		level: "F2",
-	},
-	{
-		account: "Tom",
-		name: "Nguyen Van C",
-		id: 3,
-		personal_sale: 300000,
-		team_sale: 3000000,
-		level: "F3",
-	},
-	{
-		account: "Tom",
-		name: "Nguyen Van D",
-		id: 5,
-		personal_sale: 400000,
-		team_sale: 4000000,
-		level: "F4",
-	},
-	{
-		account: "Tom",
-		name: "Nguyen Van E",
-		id: 5,
-		personal_sale: 500000,
-		team_sale: 5000000,
-		level: "F5",
-	},
-	{
-		account: "Tom",
-		name: "Nguyen Van F",
-		id: 6,
-		personal_sale: 600000,
-		team_sale: 6000000,
-		level: "F1",
-	},
-];
-
 const pagination = reactive({
 	pageSize: 10,
 	showSizeChanger: true,
 	responsive: true,
 	showLessItems: true,
-	onChange: (page, pageSize) => {},
+	onChange: (page, pageSize) => { },
 });
 
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -275,4 +200,9 @@ const handleReset = (clearFilters) => {
 function onChange(pagination, filters, sorter, extra) {
 	// console.log('params', pagination, filters, sorter, extra)
 }
+const router = useRouter();
+const handleLinkClick = (id: number) => {
+	console.log('Link clicked for ID: ', id);;
+	router.push({name: 'team' ,params: { id }});
+};
 </script>

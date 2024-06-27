@@ -6,7 +6,7 @@ export default function Teams() {
         teamRevenue: 0
     };
 
-    const getTeamMember = async () => {
+    const getAllTeamMember = async () => {
         const headers = {
             'accept': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -22,9 +22,27 @@ export default function Teams() {
             console.error('Failed to fetch team members:', error);
         }
     };
-
+        const getTeamMember = async (id) => {
+            const headers = {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+            try {
+                const response = await axios.get(`${API_BACK_END}memberlist/${id}`,{headers : headers});
+            
+                if (response.data.status === 'success') {
+                    responseTeam.data = response.data.data;
+                    console.log(response.data.data);
+                
+                }
+                // console.log(responseTeam.data);
+            } catch (error) {
+                console.error('Failed to fetch team members:', error);
+            }
+        };
     return {
         responseTeam,
+        getAllTeamMember,
         getTeamMember
     };
 }

@@ -193,7 +193,7 @@ const productList: {
 
 // xử lý chuyển trang
 const handleSelected = async  (index) => {
-	await findProduct(index);
+	//await findProduct(index);
 	await router.push(`/products/detail/${index}`);
 };
 
@@ -268,9 +268,9 @@ const encodeId = (id) => {
 			:data-index="index"
 			class="">
 		
-			<div class="space-y-2 relative group" 	>
-				<div class="" >
-					<a-image style="height: 190px; width: 250px;"
+			<div class="space-y-2 relative group main-content" 	>
+				<div class="main-img" >
+					<a-image
 						v-if="product && product.images && product.images.length > 0"
 						:src="getImageUrl(product.images[0]['image_path'])"
 						:preview="false"
@@ -298,45 +298,18 @@ const encodeId = (id) => {
 					<div class="text-start md:text-base line-clamp-2">
 						{{ product?.name }}
 					</div>
-					<div class="flex space-x-3">
+					<div class="flex space-x-3 justify-content-between align-items-center">
 						<span
 							class="color-secondary self-center font-semibold inline-block align-middle"
 							>{{
 								useFormatCurrency(product?.price)
 							}}</span
 						>
-						<!-- <span
-							class="self-center font-thin text-xs inline-block align-middle line-through"
-							>{{
-								useFormatCurrency(product.discounted_price)
-							}}</span
-							overlay absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 duration-300 flex flex-col justify-end
-						> -->
-					</div>
-
-					<div
-						class="overlay absolute" style="border: 1px solid;    position: relative;
-    				bottom: 239px;"
-					>
-						<div class="bg-white p-4 rounded-md">
-							<div class="flex justify-center">
-								<a-button
-									class="icon-center rounded-2xl bg-secondary"
-								>
-                                <span @click="addcart(product.id)">Thêm vào giỏ</span>
-                                    <ShoppingCartOutlined class="text-xl" />
-								</a-button>
-							</div>
-							<div class="mt-3">
-								<ul
-									class="list-disc list-inside text-xs font-thin text-slate-500"
-								>
-                                <li >Loại: {{ product?.category?.name }}</li>
-									<li>Ngày tạo:  {{ formatDate(product?.created_at) }}</li>
-									<!-- <li>HSD: 1 tháng</li> -->
-								</ul>
-							</div>
-						</div>
+						<span class="self-center font-thin text-xs inline-block align-middle line-through click-hover" @click="addcart(product.id)">
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+								<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3c.83.305 1.968.542 2.48 1.323c.356.545.356 1.268.356 2.715V9.76c0 2.942.061 3.912.892 4.826c.83.914 2.168.914 4.842.914h5.085c2.666 0 3.244-.601 3.756-3.193c.224-1.13.45-2.246.564-3.373c.216-2.134-.973-2.814-2.866-2.814H5.836M16.5 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Zm-8 0a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3Z"/>
+							</svg>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -371,5 +344,13 @@ const encodeId = (id) => {
 
 .group:hover .overlay {
 	display: block;
+}
+.main-img{
+	width: 300px; 
+	height: 300px;
+	object-fit: cover;
+}
+.click-hover{
+	cursor: pointer;
 }
 </style>

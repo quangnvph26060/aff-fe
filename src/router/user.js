@@ -40,7 +40,12 @@ const user = [
 				component: () =>
 				import("../components/Table/Products/Detail.vue"),
 			},
-			
+			{
+				path: "memberlist/:id",
+				name: "team",
+				component: () =>
+					import("../pages/teams/indexteammember.vue"),
+			},
 			{
 				path: "orders",
 				name: "orders",
