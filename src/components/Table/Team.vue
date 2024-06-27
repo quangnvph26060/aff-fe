@@ -83,7 +83,7 @@ const dataArr = ref([]);
 onMounted(async () => {
 	await getAllTeamMember();
 	dataArr.value = responseTeam.data;
-	//   console.log(responseTeam.data);
+	  console.log(responseTeam.data);
 
 });
 const state = reactive({
