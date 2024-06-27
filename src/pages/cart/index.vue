@@ -48,7 +48,7 @@
               v-model:value="item.amount"
               size="large"
               :min="1"
-              :max="100000"
+              :max="item.product.quantity"
               @change="handleChange(item, item.amount)"
             />
           </div>
