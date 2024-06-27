@@ -78,7 +78,7 @@ const handleDrawer = () => {
 					</a-avatar>
 					<div v-if="showModal" class="modal_profile">
 						<ul>
-							<li><a href="/profile">Thông Tin</a></li>
+							<li><router-link :to="{ name: 'profile' }">Thông Tin</router-link></li>
 							<li><a href="#" @click="handleLogout">Đăng Xuất</a></li>
 						</ul>
 					</div>
@@ -125,4 +125,45 @@ const handleDrawer = () => {
 .modal_profile ul li a:hover {
   background-color: #ccc;
 }
+.modal_profile {
+        position: absolute;
+        top: 50px; /* Căn chỉnh top theo ý muốn */
+        right: 10px; /* Căn chỉnh right theo ý muốn */
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 1000; /* Để đảm bảo nằm trên các phần tử khác khi mở modal */
+    }
+
+    .modal_profile ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .modal_profile ul li {
+        margin-bottom: 10px;
+    }
+
+    .modal_profile ul li a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+
+    .modal_profile ul li a:hover {
+        background-color: #f0f0f0;
+    }
+
+    .modal_profile ul li:last-child a {
+        border-bottom: none; /* Loại bỏ border-bottom của phần tử cuối cùng */
+    }
+
+    .modal_profile ul li a {
+        border-bottom: 1px solid #ccc; /* Thêm border-bottom cho các liên kết */
+    }
 </style>
