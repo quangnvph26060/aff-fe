@@ -1,5 +1,6 @@
 import Vuex from 'vuex';
 import axios from 'axios';
+import apiURL from '../connect';
 const store = new Vuex.Store({
     state: {
         authenticated: false,
@@ -55,9 +56,9 @@ const store = new Vuex.Store({
                 'Authorization': 'Bearer '  + token
             }
             try {
-                const API_BACK_END = "http://127.0.0.1:8000/api/"
+                const API_BACK_END = apiURL.baseURL;
                 if(token != "" && token != null){
-                    const { data } = await axios.get(`${API_BACK_END}v1/auth/get-user`, {headers : headers});
+                    const { data } = await axios.get(`${API_BACK_END}auth/get-user`, {headers : headers});
                     if (data.status == 'success') {
                         commit('setUser', data.data);
                         commit('setAdmin', data.admin);
