@@ -4,3 +4,9 @@ const apiURL = {
 };
 
 export default apiURL;
+// const apiURL = {
+// 	URL: "http://123.31.31.39:8080",
+// 	baseURL: "http://123.31.31.39:8080/api/v1/",
+// };
+
+// export default apiURL;
