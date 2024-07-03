@@ -29,10 +29,10 @@
 //       },
 // };
 module.exports = {
-    devServer: {
+    server: {
       proxy: {
         '/api': {
-          target: 'http://123.31.31.39:8080', // Thay đổi URL thành URL của API Laravel của bạn
+          target: 'http://123.31.31.39:8080',
           changeOrigin: true,
           pathRewrite: {
             '^/api': '',

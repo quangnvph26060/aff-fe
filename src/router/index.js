@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import admin from "./admin.js";
 import user from "./user.js";
 import store from '../store/auth.js';
-import { useStore} from "vuex"
+import { useStore } from "vuex"
 const routes = [
 	...admin,
 	...user,

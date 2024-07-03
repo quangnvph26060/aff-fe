@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TableTransaction from "@/components/Table/Transaction.vue";
+import TableTransaction from "../../components/Table/Transaction.vue";
 </script>
 
 <template>

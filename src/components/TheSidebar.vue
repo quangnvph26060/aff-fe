@@ -65,6 +65,7 @@ const items: ItemType[] = reactive([
 	getItem("Lịch sử giao dịch", "/transactions", HistoryOutlined, {
 		fontSize: "20px",
 	}),
+	getItem("Gói tháng", "/package", FundOutlined, { fontSize: "20px" }),
 	getItem("Animate", "/animate", FundOutlined, { fontSize: "20px" }),
 ]);
 

@@ -7,7 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import FormKyc from "@/components/Form/Kyc/index.vue";
+// import FormKyc from "@/components/Form/Kyc/index.vue";
+import FormKyc from "../../../components/Form/Kyc/index.vue";
 </script>
 
 <style scoped>

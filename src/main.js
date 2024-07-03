@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import axios from "axios";
 import App from "./App.vue";
-import store from './store/auth.js';
+ import store from '../src/store/auth.js';
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import VueSweetalert2 from "vue-sweetalert2";
@@ -23,7 +23,7 @@ router.beforeEach((to, from, next) => {
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
-app.use(store);
+ app.use(store);
 app.use(VueSweetalert2);
 app.use(Antd);
 app.use(pinia);

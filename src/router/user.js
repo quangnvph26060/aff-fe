@@ -76,6 +76,11 @@ const user = [
 				name: "animate",
 				component: () => import("../pages/animate/index.vue"),
 			},
+			{
+				path: "package",
+				name: "package",
+				component: () => import("../pages/package/index.vue"),
+			},
 		],
 		// beforeEnter(to, from, next) {
 		// 	// ...

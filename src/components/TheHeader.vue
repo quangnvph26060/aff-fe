@@ -44,18 +44,18 @@ const handleDrawer = () => {
 				<Breadcrumb :breadcrumbItems="breadcrumbItems" />
 			</div>
 			<div class="flex gap-5 justify-between items-center text-xs">
-				<a-input
+				<!-- <a-input
 					v-model="searchInput"
 					class="w-[200px] lg:w-[300px] border-none"
 					clearable
 					placeholder="Tìm kiếm"
-				/>
-				<button
+				/> -->
+				<!-- <button
 					aria-label="Notifications"
 					class="flex items-center h-[32px]"
 				>
 					<NotificationOutlined class="text-xl" />
-				</button>
+				</button> -->
 				<div
 					class="icon-center cursor-pointer block lg:hidden"
 					@click="handleDrawer"
