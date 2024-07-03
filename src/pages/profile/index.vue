@@ -82,9 +82,9 @@ import {
 	TeamOutlined,
 	ToolOutlined,
 } from "@ant-design/icons-vue";
-import CardProfileSetting from "@/components/Card/Profile/Setting.vue";
-import CardProfileInfo from "@/components/Card/Profile/Info.vue";
-import CardProfileAuthInfo from "@/components/Card/Profile/AuthInfo.vue";
+import CardProfileSetting from "../../components/Card/Profile/Setting.vue";
+import CardProfileInfo from "../../components/Card/Profile/Info.vue";
+import CardProfileAuthInfo from "../../components/Card/Profile/AuthInfo.vue";
 import { handleError, onMounted, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { useStore} from "vuex";

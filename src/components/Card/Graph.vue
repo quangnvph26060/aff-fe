@@ -105,6 +105,7 @@ const config = ref({
 
 <template>
 	<div>
-		<VueUiQuickChart :dataset="dataset" :config="config" />
+		<!-- biểu đồ  -->
+		<!-- <VueUiQuickChart :dataset="dataset" :config="config" /> -->
 	</div>
 </template>

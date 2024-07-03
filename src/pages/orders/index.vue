@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { CheckCircleOutlined } from "@ant-design/icons-vue";
-import TableOrder from "@/components/Table/Order/index.vue";
-import TableOrderOverview from "@/components/Table/Order/Overview.vue";
+import TableOrder from "../../components/Table/Order/index.vue";
+// import TableOrder from "../../components/Table/Order/index.vue";
+import TableOrderOverview from "../../components/Table/Order/Overview.vue";
 import Order from "../../api/order/order.js";
 import { useFormatCurrency } from "../../composables/useFormatCurrency";
 import { onMounted, ref } from "vue";

@@ -29,8 +29,22 @@ const handleSelected = async  (index) => {
 	await router.push(`/products/detail/${index}`);
 };
 
+//Infinite Scroll
+// const loading = ref(true);
+// const index = 0;
+// const limit = 8;
+// let newProducts = getProduct.splice(index, limit);
 
-
+// const load = () => {
+// 	setTimeout(() => {
+// 		loading.value = false;
+// 		if (getProduct.length > 0) {
+// 			newProducts = newProducts.concat(productList.splice(index, limit));
+// 		} else {
+// 			loading.value = false;
+// 		}
+// 	}, 2000);
+// };
 
 const beforeEnter = (el: HTMLElement) => {
 	el.style.opacity = "0";
@@ -74,20 +88,27 @@ const encodeId = (id) => {
 <template>
 		
         <div class="row">
-			
+			<div class="row mb-4">
+            <div class="col-lg-6 col-md-12">
+                <img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/06/banner/1200x100-1200x100-1.jpg" class="img-fluid" alt="Banner">
+            </div>
+			<div class="col-lg-6 col-md-12">
+                <img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/06/banner/1200x100-1200x100-1.jpg" class="img-fluid" alt="Banner">
+            </div>
+        	</div>
             <div class="col-lg-3">
                 <input type="text" class="form-control" placeholder="Tìm kiếm...">
             </div>
             <div class="col-lg-2">
                 <select class="form-control">
-                    <option value="">Danh Mục</option>
+                    <option value="">Chọn 1</option>
                     <option value="1">Tùy chọn 1</option>
                     <option value="2">Tùy chọn 2</option>
                 </select>
             </div>
             <div class="col-lg-2">
                 <select class="form-control">
-                    <option value="">Phần trăm hoa hồng</option>
+                    <option value="">Chọn 2</option>
                     <option value="1">Tùy chọn 1</option>
                     <option value="2">Tùy chọn 2</option>
                 </select>
@@ -95,14 +116,6 @@ const encodeId = (id) => {
             <div class="col-lg-2">
                 <button class="btn btn-primary">Tìm kiếm</button>
             </div>
-			<div class="row mb-4 mt-4">
-				<div class="col-lg-6 col-md-12">
-					<img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/06/banner/1200x100-1200x100-1.jpg" class="img-fluid h-140" alt="Banner">
-				</div>
-				<div class="col-lg-6 col-md-12">
-					<img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/06/banner/1200x100-1200x100-1.jpg" class="img-fluid h-140" alt="Banner">
-				</div>
-        	</div>
         </div>
     
 	<transition-group
@@ -167,22 +180,11 @@ const encodeId = (id) => {
 			</div>
 		</div>
 	</transition-group>
-	<!-- <p
-		class="text-center ml-auto mr-auto mb-[20px] text-xl mt-5"
-		:class="loading ? 'text-[#39a39e]' : 'text-[#cf6363]'"
-	>
-		{{ loading ? "Đang tải thêm..." : "Không còn sản phẩm nào" }}
-	</p> -->
+
 </template>
 
 <style scoped>
-/* .group .overlay {
-    transform: translateY(100%);
-    z-index: 10 !important;
-}
-.group-hover .overlay {
-    transform: translateY(0);
-} */
+
 
 .group {
 	z-index: 1;
@@ -204,8 +206,5 @@ const encodeId = (id) => {
 }
 .click-hover{
 	cursor: pointer;
-}
-.h-140{
-	height: 140px;
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import CardWithdraw from "@/components/Card/Withdraw.vue";
-import TablePayment from "@/components/Table/Payment.vue";
+import CardWithdraw from "../../components/Card/Withdraw.vue";
+import TablePayment from "../../components/Table/Payment.vue";
 </script>
 
 <template>

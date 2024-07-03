@@ -17,34 +17,62 @@
 						}}
 					</a-tag>
 				</a-form-item>
+				
 				<a-form-item label="Mã giới thiệu:">
 					<div class="flex justify-between">
 						<div
-							v-text="props.referralCode"
-							class="self-center"
+							v-text="user.referral_code"
+							class="self-center" id="myInput"
 						></div>
-						<a-button @click="copy(source)">Giới thiệu </a-button>
+						<a-button @click="copyToClipboard">Giới thiệu </a-button>
 					</div>
 				</a-form-item>
-				<a-form-item label="Số dư chính:">
-					<div>
-						{{ useFormatCurrency(props.mainWallet) }}
+				<div>
+					<div v-for="(wallet, index) in user.wallet" :key="index">
+						<div>
+						<span v-if="wallet.wallet_id === 1">Số dư chính: </span>
+						<span v-else>Ví thưởng: </span>
+						<span :key="wallet.id">{{ useFormatCurrency(wallet.total_revenue) }}</span>
+						</div>
 					</div>
-				</a-form-item>
-				<a-form-item label="Chờ thanh toán:">
-					<div>
-						{{ useFormatCurrency(props.pendingWallet) }}
-					</div>
-				</a-form-item>
+				</div>
+
+			
+				<div class="">Tài khoản đã được xác thực</div>
 			</a-form>
 		</a-card>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useFormatCurrency } from "../../../composables/useFormatCurrency";
 import { useClipboard } from "@vueuse/core";
+import { useStore} from "vuex";
+import apiURL  from "../../../connect.js";
+const store = useStore();
+const user = ref('');
+
+onMounted(async () => {
+	const userdata = await store.getters['user'];
+	user.value = userdata;
+});
+const copyToClipboard = () => {
+  var copyText = document.getElementById("myInput");
+  var referralLink = `${apiURL.FE_URL}login?referralcode=` + encodeURIComponent(copyText.textContent || copyText.innerText);
+
+  // Tạo một textarea ẩn để sao chép nội dung
+  const el = document.createElement('textarea');
+  el.value = referralLink;
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
+
 
 const props = defineProps<{
 	isAdmin: boolean;
@@ -53,8 +81,8 @@ const props = defineProps<{
 	mainWallet: number;
 	pendingWallet: number;
 }>();
-const source = ref(props.referralCode);
-const { text, copy, copied, isSupported } = useClipboard({
-	source,
-});
+
+// const { text, copy, copied, isSupported } = useClipboard({
+// 	source,
+// });
 </script>

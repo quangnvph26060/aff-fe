@@ -34,7 +34,15 @@ const formSignup = reactive<FormSignup>({
 	email: "",
 	otp:"",
 });
-
+onMounted(()=>{
+	const urlParams = new URLSearchParams(window.location.search);
+      const magioithieu = urlParams.get('referralcode');
+      if (magioithieu) {
+		formSignup.referral_code =  magioithieu;
+      } else {
+		formSignup.referral_code =  "";
+      }
+});
 // const onFinish = (values: any) => {
 // 	console.log("Success:", values);
 // };
@@ -112,7 +120,6 @@ const handleLogin = async () => {
 		},
 	});
 
-	console.log(user);
 };
 </script>
 

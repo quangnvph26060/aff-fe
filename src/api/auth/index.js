@@ -183,11 +183,17 @@ export default function Auth() {
 	}
 	const submitLogin = async () => {
 		const status = await validateFormLogin(loginForm);
+		const headers = {
+			'Access-Control-Allow-Origin':'*',
+			'Access-Control-Allow-Methods': ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+			'Access-Control-Allow-Headers': ['Content-Type', 'Authorization'],
+			'Content-Type': 'application/json',
+		}
         if (status == false) {
             return;
         }
 		try {
-			const response = await axios.post(`${API_BACK_END}login`, loginForm);
+			const response = await axios.post(`${API_BACK_END}auth/login`, loginForm, {headers:headers});
 			console.log(response.data.role);
 			if(response.data.status === 'error'||
 				response.data.role === "Admin"
@@ -196,19 +202,9 @@ export default function Auth() {
 				showErrorPopup('error','Thông tin không chính xác',true);
 				return;
 			}
-			// await store.dispatch('login', {
-			// 	user: response.data.userData,
-			// 	token: response.data.accessToken,
-			// });
 			if (response.data.status == 'success') {
-				// await swal({
-				// 	icon: 'success',
-				// 	title: 'Đăng nhập thành công',
-				// 	showConfirmButton: true,
-				// })
 				await store.dispatch('setTokenUser', { 'token': response.data.accessToken })
 				await store.dispatch('getUser')
-				
 				await router.push({ name: 'dashboard' })
 			}
 			
